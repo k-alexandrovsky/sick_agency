@@ -144,6 +144,46 @@ const setup_features_drag = f=>{
     el.ondragstart = ()=>false;
 };
 
+const setup_form = ()=>{
+    const email_re = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+    const required = 'This field is required', invalid_email = 'Invalid email';
+    const validators = {
+        name: v=>!v && required,
+        email: v=>!v && required || !email_re.test(v) && invalid_email,
+        comment: v=>!v && required,
+    };
+    const field = (f, inner='')=>$(`#contact_form [name="${f}"] ${inner}`);
+    const validate = ()=>Object.entries(validators)
+        .map(([f, v])=>[f, v(field(f).value)])
+        .filter(([, error])=>error);
+    let validate_timer;
+    const check_submit = ()=>{
+        clearTimeout(validate_timer);
+        validate_timer = setTimeout(()=>$('.form_btn.form').classList
+            .toggle('valid', !validate().length), 100);
+    };
+    Object.keys(validators).forEach(f=>
+        field(f).addEventListener('input', check_submit));
+    let anim_timer;
+    $('#contact_form').addEventListener('submit', e=>{
+        clearTimeout(anim_timer);
+        e.preventDefault();
+        Object.keys(validators).forEach(f=>
+            field(f).classList.remove('error'));
+        const invalid = validate();
+        invalid.forEach(([f, error])=>{
+            field(f).classList.add('error');
+            field(f).classList.add('animate');
+            field(f, '+ .error_label > span').innerHTML = error;
+        });
+        setTimeout(()=>invalid.forEach(([f])=>
+            field(f).classList.remove('animate')), 500);
+        if (invalid.length)
+            return;
+        alert('submitting');
+    }, false);
+};
+
 window.onload = ()=>{
     sick_pane.el = $('.sick_pane');
 
@@ -164,6 +204,11 @@ window.onload = ()=>{
         document.body.classList.add('show_form');
         v_glob = 0.2;
     });
+    $('#contact_form .close').addEventListener('click', e=>{
+        e.preventDefault();
+        document.body.classList.remove('show_form');
+        v_glob = 1;
+    });
 
     form_btn_lines.el = $('.form_btn svg');
 
@@ -171,11 +216,7 @@ window.onload = ()=>{
     document.documentElement.style.setProperty('--background', bg);
     document.documentElement.style.setProperty('--foreground', fg);
 
-    $('#contact_form .close').addEventListener('click', e=>{
-        e.preventDefault();
-        document.body.classList.remove('show_form');
-        v_glob = 1;
-    });
+    setup_form();
 
     dbg_setup();
 

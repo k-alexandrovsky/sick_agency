@@ -25,6 +25,11 @@ html {
         --borders: 2px;
     }
 }
+@media screen and (max-width: 1000px) {
+    html {
+        font-size: 6px;
+    }
+}
 
 body {
     background-color: black;
@@ -131,7 +136,7 @@ body.enter .form_btn.main {
 .form_btn.form:not(.valid) {
     border-color: var(--background);
     background-color: transparent;
-    opacity: 0.4;
+    opacity: 0.3;
     cursor: default;
 }
 .form_btn.form:not(.valid) svg { fill: var(--background); }
@@ -301,7 +306,9 @@ body.enter .layout[data-layout="main"] { opacity: 1; }
 
 .description {
     padding: 4.8rem 3.6rem 12rem 3.6rem;
+    letter-spacing: -0.01em;
     font-size: 2.4rem;
+    line-height: 1.33;
     font-family: 'Sentient';
     overflow-y: auto;
     --scrollbar: var(--foreground);
@@ -315,21 +322,32 @@ body.enter .layout[data-layout="main"] { opacity: 1; }
     right: 0;
     bottom: 0;
     width: var(--form-width);
-    padding: 5rem;
+    font-family: 'Sentient';
+    font-size: 2.4rem;
+    letter-spacing: -0.01em;
+    line-height: 1.44;
+    color: var(--background);
     background-color: var(--foreground);
     transition: transform 300ms ease;
     transform: translateX(var(--form-width));
 }
-
+#contact_form .content {
+    overflow-y: auto;
+    box-sizing: border-box;
+    height: 100%;
+    padding: 5rem 5rem 25rem;
+    --scrollbar: var(--background);
+}
 #contact_form .close {
     display: flex;
     position: absolute;
+    z-index: 1;
     top: 5rem;
     right: 5rem;
     width: 6.4rem;
     height: 6.4rem;
     padding: 0;
-    background-color: transparent;
+    background-color: var(--foreground);
     border: 1px solid var(--background);
     border-radius: 999px;
     cursor: pointer;
@@ -337,6 +355,101 @@ body.enter .layout[data-layout="main"] { opacity: 1; }
 #contact_form .close svg {
     width: 100%;
     stroke: var(--background);
+}
+#contact_form .intro > span { text-transform: uppercase; }
+#contact_form .intro > svg {
+    display: inline-block;
+    vertical-align: text-top;
+    width: 4.4rem;
+    margin: 1.4rem 0 -1.4rem;
+    fill: currentColor;
+}
+#contact_form a {
+    display: inline-block;
+    padding: 0 0.8rem;
+    margin: 0 -0.8rem;
+    text-decoration: none;
+    color: inherit;
+}
+#contact_form a:hover {
+    color: white;
+    background-color: var(--accent);
+}
+#contact_form .content > input {
+    display: block;
+    width: 100%;
+    margin-top: 3.2rem;
+    padding: 1.6rem 0;
+    color: var(--background);
+    background-color: transparent;
+    border: none;
+    border-bottom: var(--borders) solid var(--background);
+    outline: none;
+}
+#contact_form input::placeholder {
+    color: inherit;
+}
+#contact_form .error_label {
+    position: relative;
+    top: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: 0;
+    font-size: 1.6rem;
+    opacity: 0;
+    transition: opacity 200ms ease;
+}
+#contact_form .error_label svg {
+    fill: currentColor;
+    width: 3.2rem;
+    height: 3.2rem;
+    margin-left: 0.8rem;
+}
+#contact_form input.error + .error_label { opacity: 1; }
+
+@keyframes shake {
+    10%, 90% { transform: translate3d(-0.1rem, 0, 0); }
+    20%, 80% { transform: translate3d(0.2rem, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-0.4rem, 0, 0); }
+    40%, 60% { transform: translate3d(0.4rem, 0, 0); }
+}
+#contact_form input.error.animate {
+    animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+#contact_form .options {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 5rem 1.5rem -0.5rem -0.5rem;
+}
+#contact_form .options > * { margin: 0.5rem; }
+
+.btn_checkbox {
+    position: relative;
+}
+.btn_checkbox input {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+.btn_checkbox label {
+    display: block;
+    height: 5.4rem;
+    padding: 0 2.4rem;
+    line-height: 5.4rem;
+    border: 1px solid var(--background);
+    border-radius: 999px;
+}
+.btn_checkbox input:checked + label {
+    background-color: var(--background);
+    color: var(--foreground);
 }
 
 .scrollbar {

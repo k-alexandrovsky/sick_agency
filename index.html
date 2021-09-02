@@ -8,15 +8,15 @@
     <title>SICK AGENCY</title>
     <meta name="description"
         content="Digital design agency with focus on complete product packaging" />
-
     <meta property="og:type" content="website">
-    <!-- <meta property="og:url" content="https://metatags.io/"> -->
+    <!-- <meta property="og:url" content="https://sick.agency/"> -->
     <meta property="og:title" content="SICK AGENCY">
     <meta property="og:description"
         content="Digital design agency with focus on complete product packaging">
-    <!-- <meta property="og:image" content="https://metatags.io/"> -->
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- <meta property="og:image" content="https://sick.agency/og_image.png"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+        integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" type="text/css" href="index.css" />
     <script type="text/javascript" src="index.js"></script>
   </head>
@@ -29,14 +29,88 @@
     <button class="form_btn main">
         TEXT<br/>US
         <svg viewBox="0 0 156 156">
-            <use href="sprites.svg#form_btn_decoration"></use></svg>
+            <use href="sprites.svg#form_btn_decoration"></use>
+        </svg>
     </button>
-    <form id="contact_form">
-        <button class="close">
+    <form id="contact_form" autocomplete="off">
+        <button class="close" type="button">
             <svg viewBox="0 0 13 13">
                 <use href="sprites.svg#close"></use>
             </svg>
         </button>
+        <div class="content scrollbar">
+            <div class="intro">
+                <span>
+                    We are always open for interesting<br>
+                    projects and great opportunities.<br>
+                    Send your ideas, suggestions,<br>or questions to<br>
+                    <br>
+                    <a href="mailto:sickpick@sick.agency">
+                        sickpick@sick.agency</a><br>
+                </span>
+                <br>
+                or reach us directly<br>using the form below
+                <svg viewBox="0 0 43 24">
+                    <use href="sprites.svg#arr_down"></use>
+                </svg>
+            </div>
+            <input name="name" placeholder="NAME">
+            <label class="error_label">
+                <span></span>
+                <svg viewBox="0 0 13 13">
+                    <use href="sprites.svg#error"></use>
+                </svg>
+            </label>
+            <input name="email" placeholder="EMAIL">
+            <label class="error_label">
+                <span></span>
+                <svg viewBox="0 0 13 13">
+                    <use href="sprites.svg#error"></use>
+                </svg>
+            </label>
+            <input name="comment" placeholder="COMMENT">
+            <label class="error_label">
+                <span></span>
+                <svg viewBox="0 0 13 13">
+                    <use href="sprites.svg#error"></use>
+                </svg>
+            </label>
+            <div class="options">
+                <span>Choose your interest:</span>
+                <div class="btn_checkbox">
+                    <input type="checkbox" name="web_design">
+                    <label for="web_design">Web Design</label>
+                </div>
+                <div class="btn_checkbox">
+                    <input type="checkbox" name="app_design">
+                    <label for="app_design">App Design</label>
+                </div>
+                <div class="btn_checkbox">
+                    <input type="checkbox" name="branding">
+                    <label for="branding">Branding</label>
+                </div>
+                <div class="btn_checkbox">
+                    <input type="checkbox" name="e_commerce">
+                    <label for="e_commerce">E-Commerce</label>
+                </div>
+                <div class="btn_checkbox">
+                    <input type="checkbox" name="interaction_design">
+                    <label for="interaction_design">Interaction Design</label>
+                </div>
+                <div class="btn_checkbox">
+                    <input type="checkbox" name="creative_concept">
+                    <label for="creative_concept">Creative Concept</label>
+                </div>
+                <div class="btn_checkbox">
+                    <input type="checkbox" name="graphic_design">
+                    <label for="graphic_design">Graphic Design</label>
+                </div>
+                <div class="btn_checkbox">
+                    <input type="checkbox" name="ux_design">
+                    <label for="ux_design">UX Design</label>
+                </div>
+            </div>
+        </div>
         <button class="form_btn form" type="submit">
             <svg viewBox="0 0 156 156">
                 <use href="sprites.svg#submit"></use></svg>
