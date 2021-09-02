@@ -300,9 +300,11 @@ body.enter .layout[data-layout="main"] { opacity: 1; }
 }
 
 .description {
-    padding: 4.8rem 3.6rem;
+    padding: 4.8rem 3.6rem 12rem 3.6rem;
     font-size: 2.4rem;
     font-family: 'Sentient';
+    overflow-y: auto;
+    --scrollbar: var(--foreground);
 }
 
 #contact_form {
@@ -335,6 +337,24 @@ body.enter .layout[data-layout="main"] { opacity: 1; }
 #contact_form .close svg {
     width: 100%;
     stroke: var(--background);
+}
+
+.scrollbar {
+    scrollbar-color: var(--scrollbar) transparent;
+    scrollbar-width: thin;
+}
+.scrollbar::-webkit-scrollbar {
+    height: calc(var(--borders)*5);
+    width: calc(var(--borders)*5);
+}
+.scrollbar::-webkit-scrollbar-track, .scrollbar::-webkit-scrollbar-corner,
+    .scrollbar::-webkit-scrollbar-track-piece { background: transparent; }
+.scrollbar::-webkit-scrollbar-track-piece { border-radius: 999px; }
+.scrollbar::-webkit-scrollbar-thumb {
+    background: var(--scrollbar);
+    border-radius: 999px;
+    border: calc(var(--borders) * 1.75) solid transparent;
+    background-clip: content-box;
 }
 
 #dbg {
