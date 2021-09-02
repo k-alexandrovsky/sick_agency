@@ -1,0 +1,21 @@
+@font-face {
+    font-family: 'Morganite';
+    src: url('Morganite-Black.woff') format('woff');
+    font-weight: 900;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'FREE FAT FONT Slanted';
+    src: url('FREEFATFONT-Slanted.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Sentient';
+    src: url('Sentient-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
