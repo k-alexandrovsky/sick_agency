@@ -197,7 +197,7 @@ const setup_form = ()=>{
     Object.keys(validators).forEach(f=>
         field(f).addEventListener('input', check_submit));
     let anim_timer;
-    $('#contact_form').addEventListener('submit', e=>{
+    $('#contact_form').addEventListener('submit', async e=>{
         clearTimeout(anim_timer);
         e.preventDefault();
         Object.keys(validators).forEach(f=>
@@ -212,8 +212,31 @@ const setup_form = ()=>{
             field(f).classList.remove('animate')), 500);
         if (invalid.length)
             return;
-        alert('submitting');
-        $('#contact_form').classList.add('submitted');
+        try {
+            const res = await fetch('/api/submit', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    ...Object.fromEntries(Object.keys(validators)
+                        .map(f=>[f, field(f).value])),
+                    interest: [...document.querySelectorAll(
+                        '#contact_form .options input[type="checkbox"]')]
+                        .filter(c=>c.checked).map(c=>c.getAttribute('name')),
+                })
+            });
+            if (!res.ok)
+                throw res;
+            $('#contact_form').classList.add('submitted');
+        } catch(e){
+            console.log(e);
+            alert(
+                `We're sorry, but something has gone very wrong.\n`+
+                `Please try again`
+            );
+        }
     }, false);
 };
 
