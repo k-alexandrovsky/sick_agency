@@ -185,7 +185,7 @@ body.enter .layout[data-layout="main"] { opacity: 1; }
     width: 100%;
     height: 1.5rem;
     margin: -0.6rem 0;
-    cursor: row-resize;
+    /* cursor: row-resize; */
 }
 .layout.vertical > .handle::before {
     width: 100%;
