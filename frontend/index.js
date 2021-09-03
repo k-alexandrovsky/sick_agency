@@ -36,6 +36,12 @@ const form_btn_lines = {
         wheel_factor: 50,
     }
 };
+const form_success = {
+    psize: ['offsetWidth', 'offsetHeight', 'offsetWidth', 'offsetHeight'],
+    pos: [0, 0, 0, 0],
+    params: {velocity: 1},
+};
+
 const colors = [
     ['#FF4E27', '#FFC700'],
     ['#44A77D', '#FFEF61'],
@@ -48,6 +54,7 @@ const all_params = {
     sick_pane,
     gears,
     features,
+    form_success,
 };
 
 const $ = sel=>document.querySelector(sel);
@@ -84,6 +91,18 @@ const animation_loop = ()=>{
     apply_accel(form_btn_lines, 360);
     form_btn_lines.el.style.setProperty('--rotate2',
         `${form_btn_lines.pos}deg`);
+    // FORM_SUCCESS
+    if (document.body.classList.contains('show_form'))
+    {
+        for (let i=0; i<4; i++)
+        {
+            const el_w = form_success.el[i].children[0][form_success.psize[i]];
+            form_success.pos[i] = (form_success.pos[i]
+                - form_success.params.velocity + el_w) % el_w;
+            form_success.el[i].style.setProperty('--translate',
+                `${form_success.pos[i]}px`);
+        }
+    }
     // WE'RE DONE FOR THIS FRAME
     requestAnimationFrame(animation_loop);
 };
@@ -118,7 +137,7 @@ const dbg_setup = ()=>{
         $('#dbg-editors').appendChild(ta);
         return ()=>{
             const new_v = JSON.parse(ta.value);
-            return ()=>{ all_params[p].params = new_v; };
+            return ()=>{ Object.assign(all_params[p].params, new_v); };
         };
     });
     $('#dbg-save').addEventListener('click', ()=>{
@@ -194,6 +213,7 @@ const setup_form = ()=>{
         if (invalid.length)
             return;
         alert('submitting');
+        $('#contact_form').classList.add('submitted');
     }, false);
 };
 
@@ -228,6 +248,9 @@ window.onload = ()=>{
     const [bg, fg] = colors[Math.floor(Math.random() * colors.length)];
     document.documentElement.style.setProperty('--background', bg);
     document.documentElement.style.setProperty('--foreground', fg);
+
+    form_success.el = new Array(4).fill()
+        .map((_, i)=>$(`.content_submitted > div:nth-child(${i+1})`));
 
     setup_form();
 
