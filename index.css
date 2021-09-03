@@ -131,7 +131,8 @@ body.enter .form_btn.main {
 .form_btn.main svg { transform: rotate(var(--rotate2)); }
 
 .form_btn.form {
-    transition: background-color 200ms ease, border-color 200ms ease;
+    transition: background-color 200ms ease, border-color 200ms ease,
+        visibility 0ms linear 400ms;
 }
 .form_btn.form:not(.valid) {
     border-color: var(--background);
@@ -202,7 +203,6 @@ body.enter .layout[data-layout="main"] { opacity: 1; }
     text-align: center;
     font-family: 'Morganite';
     font-weight: 900;
-    font-style: italic;
     white-space: nowrap;
     transform: rotate(180deg) translateX(-2.5%);
     --translate: 0px;
@@ -331,17 +331,79 @@ body.enter .layout[data-layout="main"] { opacity: 1; }
     transition: transform 300ms ease;
     transform: translateX(var(--form-width));
 }
-#contact_form .content {
+#contact_form > .content {
     overflow-y: auto;
     box-sizing: border-box;
     height: 100%;
     padding: 5rem 5rem 25rem;
     --scrollbar: var(--background);
+    transition: visibility 0ms linear 400ms;
+}
+#contact_form > .content_submitted {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: grid;
+    grid-template-columns: 1rem 8.4vw 1rem 1fr 1rem 8.4vw 1rem;
+    grid-template-rows: 1rem 8.4vw 1rem 1fr 1rem 8.4vw 1rem;
+    text-align: center;
+    text-transform: uppercase;
+    visibility: hidden;
+    opacity: 0;
+    background-color: var(--foreground);
+    transition: opacity 300ms ease;
+}
+#contact_form > .content_submitted > div:last-child {
+    grid-column: 4;
+    grid-row: 4;
+    max-width: 42rem;
+    margin: auto;
+}
+#contact_form > .content_submitted > div:not(:last-child) {
+    overflow: hidden;
+    font-family: 'Morganite';
+    font-weight: 900;
+    font-size: 11.8vw;
+    line-height: 0.76;
+    white-space: nowrap;
+}
+#contact_form > .content_submitted > div:nth-child(1) {
+    grid-row: 2;
+    grid-column-start: 2;
+    grid-column-end: 5;
+}
+#contact_form > .content_submitted > div:nth-child(2) {
+    grid-column: 6;
+    grid-row-start: 2;
+    grid-row-end: 5;
+    writing-mode: vertical-lr;
+    line-height: 0.67;
+}
+#contact_form > .content_submitted > div:nth-child(3) {
+    grid-row: 6;
+    grid-column-start: 4;
+    grid-column-end: 7;
+}
+#contact_form > .content_submitted > div:nth-child(4) {
+    grid-column: 2;
+    grid-row-start: 4;
+    grid-row-end: 7;
+    writing-mode: vertical-lr;
+    line-height: 0.67;
+}
+#contact_form.submitted > .content { visibility: hidden; }
+#contact_form.submitted > .form_btn.form { visibility: hidden; }
+#contact_form.submitted > .content_submitted {
+    opacity: 1;
+    visibility: visible;
 }
 #contact_form .close {
     display: flex;
     position: absolute;
-    z-index: 1;
+    z-index: 2;
     top: 5rem;
     right: 5rem;
     width: 6.4rem;
@@ -417,7 +479,6 @@ body.enter .layout[data-layout="main"] { opacity: 1; }
 #contact_form input.error.animate {
     animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
 }
-
 #contact_form .options {
     display: flex;
     flex-wrap: wrap;
