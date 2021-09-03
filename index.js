@@ -37,10 +37,10 @@ const form_btn_lines = {
     }
 };
 const colors = [
-    ['#FF5935', '#FFB800'],
-    ['#46B385', '#FFEF61'],
+    ['#FF4E27', '#FFC700'],
+    ['#44A77D', '#FFEF61'],
     ['#6888B7', '#FFBFBF'],
-    ['#D65858', '#DCA2A2'],
+    ['#D85454', '#F3B1B1'],
     ['#EFFF34', '#46B86D'],
 ];
 let v_glob = 1;
