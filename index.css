@@ -278,7 +278,7 @@ body.enter .layout[data-layout="main"] { opacity: 1; }
 .gear {
     position: relative;
     display: block;
-    width: min(12vw, 20vh);
+    width: min(12vw, 18vh);
 }
 .gear .foreground { transition: fill 200ms ease; }
 .gear:hover .foreground { fill: var(--accent); }
