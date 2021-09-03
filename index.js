@@ -88,6 +88,19 @@ const animation_loop = ()=>{
     requestAnimationFrame(animation_loop);
 };
 const dbg_setup = ()=>{
+    if (!localStorage.enable_dbg)
+        return;
+
+    const dbg = document.createElement('div');
+    dbg.setAttribute('id', 'dbg');
+    document.body.appendChild(dbg);
+    dbg.innerHTML = `
+        <div id="dbg-editors"></div>
+        <div>
+            <button id="dbg-move">MOVE</button>
+            <label id="dbg-error">Failed to parse</label>
+            <button id="dbg-save">SAVE</button>
+        </div>`;
     $('#dbg').setAttribute('data-corner', localStorage.dbg_corner||1);
     $('#dbg-move').addEventListener('click', ()=>{
         const corner = +$('#dbg').getAttribute('data-corner') % 4 + 1;
