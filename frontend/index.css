@@ -128,7 +128,11 @@ body.enter .form_btn.main {
     fill: white;
     transition: fill 200ms ease;
 }
-.form_btn.main svg { transform: rotate(var(--rotate2)); }
+.form_btn.main svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(var(--rotate2));
+}
 
 .form_btn.form {
     transition: background-color 200ms ease, border-color 200ms ease,
@@ -146,6 +150,7 @@ body.enter .form_btn.main {
     display: flex;
     overflow: hidden;
 }
+.layout > * { flex: 0 0 auto; }
 .layout.vertical { flex-direction: column; }
 .layout[data-layout="main"] {
     width: 100vw;
@@ -198,6 +203,7 @@ body.enter .layout[data-layout="main"] { opacity: 1; }
     display: flex;
     padding: 0 1.6rem;
     writing-mode: vertical-rl;
+    width: 11.2vw;
     font-size: 16vw;
     line-height: 0.7;
     text-align: center;

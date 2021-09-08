@@ -2,7 +2,7 @@
     font-family: 'Morganite';
     src: url('Morganite-Black.woff') format('woff');
     font-weight: 900;
-    font-style: italic;
+    font-style: normal;
 }
 
 @font-face {
