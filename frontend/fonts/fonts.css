@@ -6,10 +6,12 @@
 }
 
 @font-face {
-    font-family: 'FREE FAT FONT Slanted';
-    src: url('FREEFATFONT-Slanted.woff') format('woff');
+    font-family: 'ThunderThinIta';
+    src: url('Thunder-ThinLCItalic.woff2') format('woff2'), /* Modern Browsers */
+         url('Thunder-ThinLCItalic.otf') format('opentype'); /* Safari, Android, iOS */
+             font-style: italic;
     font-weight: normal;
-    font-style: normal;
+    text-rendering: optimizeLegibility;
 }
 
 @font-face {

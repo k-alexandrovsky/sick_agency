@@ -252,7 +252,7 @@ window.onload = ()=>{
     const logo = $('.logo');
     logo.style.setProperty('--left', `${Math.random()*25+5}vw`);
     logo.style.setProperty('--top', `${Math.random()*25+5}vh`);
-    logo.style.setProperty('--rotate', `${Math.random()*30-15}deg`);
+    logo.style.setProperty('--rotate', `${Math.random()*150-75}deg`);
 
     const form_btn = $('.form_btn');
     form_btn.style.setProperty('--rotate', `${Math.random()*60-30}deg`);

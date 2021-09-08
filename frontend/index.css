@@ -57,37 +57,14 @@ body.show_form #contact_form { transform: translateX(0); }
     z-index: 10;
     left: var(--left);
     top: var(--top);
-    width: 23rem;
-    height: 10.4rem;
-    color: white;
-    font-family: 'Sentient';
-    font-size: 2.4rem;
-    text-decoration: none;
-    background-color: var(--accent);
-    border-radius: 999px;
     opacity: 0;
     transition: opacity 400ms ease, transform 500ms ease-in;
     transform: rotate(calc(var(--rotate) / -0.5)) scale(5);
 }
+.logo > svg { width: 6.3vw; }
 body.enter .logo {
     opacity: 1;
     transform: rotate(var(--rotate));
-}
-.logo::before {
-    content: '';
-    position: absolute;
-    top: 0.8rem;
-    right: 0.8rem;
-    bottom: 0.8rem;
-    left: 0.8rem;
-    border: 1px solid white;
-    border-radius: 999px;
-}
-.logo svg {
-    fill: white;
-    width: 1.4rem;
-    margin: 0.2rem 0.4rem 0;
-    flex: 0 0 auto;
 }
 
 .form_btn {
@@ -228,15 +205,12 @@ body.enter .layout[data-layout="main"] { opacity: 1; }
 
 .feature_pane {
     padding: 0.8rem 0;
-    font-family: 'FREE FAT FONT Slanted';
+    font-family: 'ThunderThinIta';
     font-size: 8.4vw;
     line-height: 0.68;
     white-space: nowrap;
     text-align: center;
-    -webkit-text-fill-color: var(--background);
-    -webkit-text-stroke-color: var(--foreground);
-    -webkit-text-stroke-width: calc(var(--borders)*0.95);
-    letter-spacing: var(--borders);
+    text-transform: uppercase;
     --translate: 0px;
     transform: translateY(4%);
     cursor: move;
@@ -253,25 +227,8 @@ body.enter .layout[data-layout="main"] { opacity: 1; }
     position: relative;
     display: inline-block;
     margin: 0.8vw -1.8vw 0 -1.5vw;
-    width: 2.4vw;
-    height: 3.6vw;
-    vertical-align: top;
-    font-family: 'Sentient';
-    font-size: calc(var(--borders) * 10);
-    line-height: 0;
-    -webkit-text-fill-color: var(--foreground);
-    -webkit-text-stroke-width: 0;
-    border: var(--borders) solid var(--foreground);
-    border-radius: 1vw;
-    transform: skewX(-6deg);
 }
-.feature_pane .plus::before {
-    content: '+';
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-42%, -50%);
-}
+.feature_pane .plus::before { content: '+'; }
 
 .gears {
     display: flex;
