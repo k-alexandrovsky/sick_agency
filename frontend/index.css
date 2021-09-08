@@ -207,12 +207,12 @@ body.enter .layout[data-layout="main"] { opacity: 1; }
     padding: 0.8rem 0;
     font-family: 'ThunderThinIta';
     font-size: 8.4vw;
-    line-height: 0.68;
+    line-height: 0.625;
     white-space: nowrap;
     text-align: center;
     text-transform: uppercase;
     --translate: 0px;
-    transform: translateY(4%);
+    transform: translateY(6.6%);
     cursor: move;
     cursor: grabbing;
     user-select: none;
