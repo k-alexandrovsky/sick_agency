@@ -155,8 +155,9 @@
         </button>
     </form>
     <div class="layout horizontal" data-layout="main">
-        <div>
+        <div data-item="sick_pane">
             <div class="sick_pane foreground">
+                <span>THIS IS SICK</span>
                 <span>THIS IS SICK</span>
                 <span>THIS IS SICK</span>
                 <span>THIS IS SICK</span>
@@ -168,14 +169,15 @@
         </div>
         <div class="handle"></div>
         <div class="fill layout vertical">
-            <div class="fill layout horizontal" data-layout="splash">
+            <div class="fill layout horizontal">
                 <svg class="fill splash foreground" viewBox="0 0 1112 908"
-                    preserveAspectRatio="none">
+                    preserveAspectRatio="none" style="flex: 2 2 0;"
+                    data-item="splash">
                     <use href="sprites.svg#splash"></use>
                 </svg>
                 <div class="handle"></div>
-                <div class="layout vertical" data-layout="right">
-                    <div class="gears">
+                <div class="layout vertical" style="flex: 1 1 0;">
+                    <div class="gears" style="flex: 1 1 0;" data-item="gears">
                         <a href="http://instagram.com/maxberg.design" class="gear">
                             <svg class="foreground" viewBox="0 0 232 232">
                                 <use href="sprites.svg#gear"></use>
@@ -194,7 +196,8 @@
                         </a>
                     </div>
                     <div class="handle"></div>
-                    <div class="description foreground scrollbar">
+                    <div class="description foreground scrollbar"
+                        style="flex: 2 2 0;" data-item="description">
                         We provide a mix of expertise from communication design
                         to building product logic. The combination of these
                         skills, as well as solid experience in startups
@@ -204,7 +207,7 @@
                 </div>
             </div>
             <div class="handle"></div>
-            <div class="feature_pane foreground">
+            <div class="feature_pane foreground" data-item="feature_pane">
                 <div>
                     <span>UI</span>
                     <span class="plus"></span>

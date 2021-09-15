@@ -57,7 +57,115 @@ const all_params = {
     form_success,
 };
 
+const layouts = [
+    ['H',
+        ['sick_pane'],
+        ['V',
+            ['H',
+                ['splash', 2],
+                ['V',
+                    ['gears', 1],
+                    ['description', 2],
+                ],
+            ],
+            ['feature_pane'],
+        ],
+    ],
+    ['H',
+        ['V',
+            ['sick_pane'],
+            ['H',
+                ['V',
+                    ['description', 1],
+                    ['gears', 1],
+                ],
+                ['splash', 2]
+            ]
+        ],
+        ['feature_pane'],
+    ],
+    ['H',
+        ['feature_pane'],
+        ['H',
+            ['V',
+                ['H',
+                    ['description', 2],
+                    ['gears', 1],
+                ],
+                ['splash', 2],
+            ],
+            ['sick_pane'],
+        ],
+    ],
+    ['H',
+        ['V',
+            ['H',
+                ['splash', 2],
+                ['V',
+                    ['description', 2],
+                    ['gears', 3],
+                ],
+            ],
+            ['sick_pane'],
+        ],
+        ['feature_pane'],
+    ],
+    ['H',
+        ['sick_pane'],
+        ['V',
+            ['feature_pane'],
+            ['H',
+                ['V',
+                    ['gears', 2],
+                    ['description', 3],
+                ],
+                ['splash', 2]
+            ],
+        ],
+    ],
+];
+
 const $ = sel=>document.querySelector(sel);
+const $$ = sel=>[...document.querySelectorAll(sel)];
+
+const init_layout = ()=>{
+    const items = $$('[data-item]')
+        .reduce((o, e)=>(o[e.getAttribute('data-item')] = e, o), {});
+    const apply_flex = (n, flex)=>{
+        if (flex)
+            n.style.setProperty('flex', `${flex} ${flex} 0`);
+        else
+            n.style.removeProperty('flex');
+        return n;
+    }
+    const process_layout = (node, type, child1, child2, flex=1)=>{
+        const process_child = child=>{
+            if (/[VH]/.test(child[0])) {
+                const layout = node.appendChild(document.createElement('div'));
+                layout.classList.add('layout');
+                process_layout(layout, ...child);
+            } else {
+                const [key, flex] = child;
+                node.appendChild(apply_flex(items[key], flex));
+            }
+        };
+        node.classList.toggle('vertical', type==='V');
+        node.classList.toggle('horizontal', type==='H');
+        apply_flex(node, flex);
+        process_child(child1);
+        const handle = node.appendChild(document.createElement('div'));
+        handle.classList.add('handle');
+        process_child(child2);
+    };
+    for (const k in items)
+        items[k].remove();
+    const main_layout = $('[data-layout="main"]');
+    [...main_layout.children].forEach(c=>c.remove());
+    const qs_layout = new URL(location.href).searchParams.get('layout');
+    const selected_idx = qs_layout ? (+qs_layout) % layouts.length
+        : Math.floor(Math.random()*layouts.length);
+    process_layout(main_layout, ...layouts[selected_idx]);
+};
 
 let tm_start = Date.now();
 const apply_accel = (f, period)=>{
@@ -72,8 +180,11 @@ const apply_accel = (f, period)=>{
 
 const animation_loop = ()=>{
     // THIS IS SICK
-    const sick_w = sick_pane.el.children[0].offsetHeight*3;
-    const sick_dir = apply_accel(sick_pane, sick_w);
+    const sick_period = sick_pane.el.children[0][sick_pane.el.parentElement
+        .parentElement.classList.contains('horizontal')
+            ? 'offsetHeight' : 'offsetWidth'];
+    const sick_dir = apply_accel(sick_pane, sick_period*4);
+    sick_pane.el.style.setProperty('--offset', `${sick_period*4}px`);
     sick_pane.el.style.setProperty('--translate', `${sick_pane.pos}px`);
     const skew = sick_dir*(Math.abs(sick_pane.velocity*v_glob)
         - sick_pane.params.v_min) * sick_pane.params.skew_ratio;
@@ -82,20 +193,20 @@ const animation_loop = ()=>{
     apply_accel(gears, 360);
     gears.el.style.setProperty('--rotate', `${gears.pos}deg`);
     // FEATURES
-    const features_w = features.el.children[0].offsetWidth/2;
+    const features_size_prop = features.el.parentElement.classList
+        .contains('horizontal') ? 'offsetHeight' : 'offsetWidth';
+    const features_size = features.el.children[0][features_size_prop]/2;
     features.pos = 'override_pos' in features ? features.override_pos
-        : (features.pos - features.params.velocity*v_glob + features_w)
-            % features_w;
+        : (features.pos - features.params.velocity*v_glob + features_size)
+            % features_size;
     features.el.style.setProperty('--translate', `${features.pos}px`);
     // FORM BTN LINES
     apply_accel(form_btn_lines, 360);
     form_btn_lines.el.style.setProperty('--rotate2',
         `${form_btn_lines.pos}deg`);
     // FORM_SUCCESS
-    if (document.body.classList.contains('show_form'))
-    {
-        for (let i=0; i<4; i++)
-        {
+    if (document.body.classList.contains('show_form')) {
+        for (let i=0; i<4; i++) {
             const el_w = form_success.el[i].children[0][form_success.psize[i]];
             form_success.pos[i] = (form_success.pos[i]
                 - form_success.params.velocity + el_w) % el_w;
@@ -145,7 +256,7 @@ const dbg_setup = ()=>{
         try {
             const apply_arr = params.map(p=>p());
             apply_arr.forEach(a=>a());
-        } catch(e){
+        } catch(e) {
             $('#dbg-error').className = 'visible';
         }
     });
@@ -153,13 +264,16 @@ const dbg_setup = ()=>{
 
 const setup_features_drag = f=>{
     const el = f.el;
-    let init_x, init_pos;
+    let init_cursor_pos, init_pos;
     el.onmousedown = e=>{
+        const [cursor_prop, cursor_dir] = features.el.parentElement.classList
+            .contains('horizontal') ? ['clientY', -1] : ['clientX', 1];
         e.preventDefault();
-        init_x = e.clientX;
+        init_cursor_pos = e[cursor_prop];
         init_pos = f.pos;
         const mouse_move = _e=>{
-            f.override_pos = init_pos + _e.clientX - init_x;
+            f.override_pos = init_pos
+                + (_e[cursor_prop] - init_cursor_pos) * cursor_dir;
         };
         const mouse_up = ()=>{
             f.params.velocity = Math.abs(f.params.velocity)
@@ -230,7 +344,7 @@ const setup_form = ()=>{
             if (!res.ok)
                 throw res;
             $('#contact_form').classList.add('submitted');
-        } catch(e){
+        } catch(e) {
             console.log(e);
             alert(
                 `We're sorry, but something has gone very wrong.\n`+
@@ -241,6 +355,8 @@ const setup_form = ()=>{
 };
 
 window.onload = ()=>{
+    init_layout();
+
     sick_pane.el = $('.sick_pane');
 
     gears.el = $('.gears');
