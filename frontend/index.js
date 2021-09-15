@@ -276,8 +276,11 @@ const setup_features_drag = f=>{
                 + (_e[cursor_prop] - init_cursor_pos) * cursor_dir;
         };
         const mouse_up = ()=>{
-            f.params.velocity = Math.abs(f.params.velocity)
-                * Math.sign(init_pos - f.override_pos);
+            if (f.override_pos && f.override_pos!=init_pos)
+            {
+                f.params.velocity = Math.abs(f.params.velocity)
+                    * Math.sign(init_pos - f.override_pos);
+            }
             delete f.override_pos;
             document.body.classList.remove('dragging');
             document.removeEventListener('mouseup', mouse_up);
