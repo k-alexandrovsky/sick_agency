@@ -380,6 +380,9 @@ const setup_form = ()=>{
 };
 
 window.onload = ()=>{
+    document.documentElement.style.setProperty('--app-height',
+        `${window.innerHeight}px`);
+
     init_layout();
 
     sick_pane.el = $('.sick_pane');

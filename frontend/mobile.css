@@ -4,8 +4,15 @@
         --borders: 2px;
     }
 
-    body, html {
+    html {
         position: fixed;
+        --form-width: 100vw;
+    }
+
+    .logo > svg { width: 22vw; }
+
+    .layout[data-layout="main"] {
+        height: var(--app-height);
     }
 
     .layout.horizontal > [data-item="sick_pane"] .sick_pane {
