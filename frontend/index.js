@@ -90,7 +90,7 @@ const layouts = [
             ['V',
                 ['H',
                     ['description', 2],
-                    ['gears', 1],
+                    ['gears', 1, 'horizontal'],
                 ],
                 ['splash', 2],
             ],
@@ -124,6 +124,22 @@ const layouts = [
         ],
     ],
 ];
+const mobile_layouts = [
+    ['V',
+        ['H',
+            ['sick_pane'],
+            ['V',
+                ['feature_pane'],
+                ['V',
+                    ['description', 1],
+                    ['gears', 1, 'horizontal'],
+                ],
+            ],
+            2,
+        ],
+        ['splash', 1],
+    ],
+];
 
 const $ = sel=>document.querySelector(sel);
 const $$ = sel=>[...document.querySelectorAll(sel)];
@@ -137,7 +153,7 @@ const init_layout = ()=>{
         else
             n.style.removeProperty('flex');
         return n;
-    }
+    };
     const process_layout = (node, type, child1, child2, flex=1)=>{
         const process_child = child=>{
             if (/[VH]/.test(child[0])) {
@@ -145,8 +161,12 @@ const init_layout = ()=>{
                 layout.classList.add('layout');
                 process_layout(layout, ...child);
             } else {
-                const [key, flex] = child;
-                node.appendChild(apply_flex(items[key], flex));
+                const [key, flex, variant] = child;
+                const child_n = node.appendChild(apply_flex(items[key], flex));
+                if (variant)
+                    child_n.setAttribute('data-variant', variant);
+                else
+                    child_n.removeAttribute('data-variant');
             }
         };
         node.classList.toggle('vertical', type==='V');
@@ -162,9 +182,11 @@ const init_layout = ()=>{
     const main_layout = $('[data-layout="main"]');
     [...main_layout.children].forEach(c=>c.remove());
     const qs_layout = new URL(location.href).searchParams.get('layout');
-    const selected_idx = qs_layout ? (+qs_layout) % layouts.length
-        : Math.floor(Math.random()*layouts.length);
-    process_layout(main_layout, ...layouts[selected_idx]);
+    const _layouts = window.matchMedia('(max-width: 767px)').matches
+        ? mobile_layouts : layouts;
+    const selected_idx = qs_layout ? (+qs_layout) % _layouts.length
+        : Math.floor(Math.random()*_layouts.length);
+    process_layout(main_layout, ..._layouts[selected_idx]);
 };
 
 let tm_start = Date.now();

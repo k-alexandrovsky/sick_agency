@@ -1,0 +1,25 @@
+@media screen and (max-width: 767px) {  /* @media for more specificity */
+    html[lang] {
+        font-size: 1.8vw;
+        --borders: 2px;
+    }
+
+    .layout.horizontal > [data-item="sick_pane"] .sick_pane {
+        width: 20vw;
+        font-size: 29vw;
+        transform: rotate(180deg) translateX(-2.9%);
+    }
+
+    .feature_pane {
+        font-size: 24vw;
+        line-height: 0.68;
+        transform: none;
+    }
+
+    .gear {
+        width: 100%;
+    }
+    .gear .icon {
+        width: 8vw;
+    }
+}
