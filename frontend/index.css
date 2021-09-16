@@ -208,7 +208,9 @@ body.enter .layout[data-layout="main"] { opacity: 1; }
 
 .feature_pane {
     padding: 0.8rem 0;
-    font-family: 'ThunderThinIta';
+    font-family: 'Thunder';
+    font-style: italic;
+    font-weight: 300;
     font-size: 8.4vw;
     line-height: 0.625;
     white-space: nowrap;
@@ -223,7 +225,7 @@ body.enter .layout[data-layout="main"] { opacity: 1; }
 .layout.horizontal > .feature_pane {
     padding: 0 0.8rem;
     writing-mode: vertical-rl;
-    transform: rotate(180deg) translateX(-6.6%);
+    transform: rotate(180deg) translateX(-5%);
 }
 .feature_pane > div {
     display: inline-block;

@@ -6,11 +6,11 @@
 }
 
 @font-face {
-    font-family: 'ThunderThinIta';
-    src: url('Thunder-ThinLCItalic.woff2') format('woff2'), /* Modern Browsers */
-         url('Thunder-ThinLCItalic.otf') format('opentype'); /* Safari, Android, iOS */
-             font-style: italic;
-    font-weight: normal;
+    font-family: 'Thunder';
+    src: url('Thunder-ExtraLightLCItalic.woff2') format('woff2'),
+         url('Thunder-ExtraLightLCItalic.woff') format('woff');
+    font-style: italic;
+    font-weight: 300;
     text-rendering: optimizeLegibility;
 }
 
