@@ -457,7 +457,7 @@ body.enter .layout[data-layout="main"] { opacity: 1; }
     color: var(--background);
     background-color: transparent;
     border: none;
-    border-bottom: var(--borders) solid var(--background);
+    border-bottom: 2px solid var(--background);
     outline: none;
 }
 #contact_form input::placeholder {
