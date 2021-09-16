@@ -4,6 +4,10 @@
         --borders: 2px;
     }
 
+    body, html {
+        position: fixed;
+    }
+
     .layout.horizontal > [data-item="sick_pane"] .sick_pane {
         width: 20vw;
         font-size: 29vw;
