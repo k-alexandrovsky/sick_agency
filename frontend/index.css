@@ -167,7 +167,7 @@ body.enter .layout[data-layout="main"] { opacity: 1; }
 
 .sick_pane {
     display: flex;
-    padding: 0 1.6rem;
+    padding: 1.6rem 0;
     font-size: 14vw;
     line-height: 0.7;
     text-align: center;
@@ -179,6 +179,7 @@ body.enter .layout[data-layout="main"] { opacity: 1; }
     transform: translateX(calc(var(--offset) * -1)) translateY(2.5%);
 }
 .layout.horizontal > [data-item="sick_pane"] .sick_pane {
+    padding: 0 1.6rem;
     width: 11.2vw;
     font-size: 16vw;
     writing-mode: vertical-rl;
@@ -186,10 +187,11 @@ body.enter .layout[data-layout="main"] { opacity: 1; }
 }
 .sick_pane span {
     display: inline-block;
-    padding: 1vw 0;
+    padding: 0 1vw;
     transform: translateX(var(--translate)) skewX(var(--skew));
 }
 .layout.horizontal > [data-item="sick_pane"] .sick_pane span {
+    padding: 1vw 0;
     transform: translateY(var(--translate)) skewY(var(--skew));
 }
 

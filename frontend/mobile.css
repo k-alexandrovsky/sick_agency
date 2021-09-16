@@ -15,16 +15,24 @@
         height: var(--app-height);
     }
 
+    .layout.vertical > [data-item="sick_pane"] .sick_pane {
+        height: 20vw;
+        font-size: 29vw;
+        transform: translateX(calc(var(--offset) * -1)) translateY(2.5%);
+    }
     .layout.horizontal > [data-item="sick_pane"] .sick_pane {
         width: 20vw;
-        font-size: 29vw;
-        transform: rotate(180deg) translateX(-2.9%);
+        font-size: 30vw;
+        transform: rotate(180deg) translateX(-2%);
     }
 
-    .feature_pane {
+    .feature_pane, .layout.horizontal > .feature_pane {
         font-size: 24vw;
         line-height: 0.68;
         transform: none;
+    }
+    .layout.horizontal > .feature_pane {
+        transform: rotate(-180deg) translateX(-2%);
     }
 
     .gear {
