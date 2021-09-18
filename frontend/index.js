@@ -169,6 +169,8 @@ const mobile_layouts = [
     ],
 ];
 
+const IS_MOBILE = window.matchMedia('(max-width: 767px)').matches;
+
 const $ = sel=>document.querySelector(sel);
 const $$ = sel=>[...document.querySelectorAll(sel)];
 
@@ -210,8 +212,7 @@ const init_layout = ()=>{
     const main_layout = $('[data-layout="main"]');
     [...main_layout.children].forEach(c=>c.remove());
     const qs_layout = new URL(location.href).searchParams.get('layout');
-    const _layouts = window.matchMedia('(max-width: 767px)').matches
-        ? mobile_layouts : layouts;
+    const _layouts = IS_MOBILE ? mobile_layouts : layouts;
     const selected_idx = qs_layout ? (+qs_layout) % _layouts.length
         : Math.floor(Math.random()*_layouts.length);
     process_layout(main_layout, ..._layouts[selected_idx]);
@@ -315,15 +316,18 @@ const dbg_setup = ()=>{
 const setup_features_drag = f=>{
     const el = f.el;
     let init_cursor_pos, init_pos;
-    el.onmousedown = e=>{
-        const [cursor_prop, cursor_dir] = features.el.parentElement.classList
-            .contains('horizontal') ? ['clientY', -1] : ['clientX', 1];
+    el.onmousedown = el.ontouchstart = e=>{
+        const [cursor_coord, cursor_dir] = features.el.parentElement.classList
+            .contains('horizontal') ? ['Y', -1] : ['X', 1];
+        const get_pos = _e=>_e.touches ? _e.touches[0]['page'+cursor_coord]
+            : e['client'+cursor_coord]
         e.preventDefault();
-        init_cursor_pos = e[cursor_prop];
+        e.stopPropagation();
+        init_cursor_pos = get_pos(e);
         init_pos = f.pos;
         const mouse_move = _e=>{
             f.override_pos = init_pos
-                + (_e[cursor_prop] - init_cursor_pos) * cursor_dir;
+                + (get_pos(_e) - init_cursor_pos) * cursor_dir;
         };
         const mouse_up = ()=>{
             if (f.override_pos && f.override_pos!=init_pos)
@@ -334,11 +338,15 @@ const setup_features_drag = f=>{
             delete f.override_pos;
             document.body.classList.remove('dragging');
             document.removeEventListener('mouseup', mouse_up);
+            document.removeEventListener('touchend', mouse_up);
             document.removeEventListener('mousemove', mouse_move);
+            document.removeEventListener('touchmove', mouse_move);
         };
         document.body.classList.add('dragging');
         document.addEventListener('mousemove', mouse_move);
+        document.addEventListener('touchmove', mouse_move);
         document.addEventListener('mouseup', mouse_up);
+        document.addEventListener('touchend', mouse_up);
     };
     el.ondragstart = ()=>false;
 };
@@ -407,11 +415,45 @@ const setup_form = ()=>{
     }, false);
 };
 
-window.onload = ()=>{
-    document.documentElement.style.setProperty('--app-height',
-        `${window.innerHeight}px`);
+const apply_wheel = (f, delta)=>{
+    f.velocity = Math.max(-f.params.v_max,
+        Math.min(f.velocity+delta/f.params.wheel_factor, f.params.v_max));
+};
 
+const process_scroll = delta=>{
+    apply_wheel(sick_pane, delta);
+    apply_wheel(gears, delta);
+    apply_wheel(form_btn_lines, delta);
+};
+
+const init_mobile = ()=>{
+    document.addEventListener('touchstart', e=>{
+        const get_pos = _e=>_e.touches[0].pageY;
+        let cur_pos = get_pos(e);
+        const touch_move = _e=>{
+            const pos = get_pos(_e);
+            if (Math.abs(cur_pos - pos) < 2)
+                return;
+            process_scroll((pos - cur_pos)*4);
+            cur_pos = pos;
+        };
+        const touch_up = ()=>{
+            document.removeEventListener('touchend', touch_up);
+            document.removeEventListener('touchmove', touch_move);
+        };
+        document.addEventListener('touchmove', touch_move);
+        document.addEventListener('touchend', touch_up);
+    });
+    $('.description').addEventListener('touchstart', e=>{
+        e.stopPropagation();
+    });
+};
+
+window.onload = ()=>{
     init_layout();
+
+    if (IS_MOBILE)
+        init_mobile();
 
     sick_pane.el = $('.sick_pane');
 
@@ -457,13 +499,7 @@ window.onload = ()=>{
     requestAnimationFrame(animation_loop);
 };
 
-const apply_wheel = (f, delta)=>{
-    f.velocity = Math.max(-f.params.v_max,
-        Math.min(f.velocity+delta/f.params.wheel_factor, f.params.v_max));
-};
+document.addEventListener('wheel', e=>process_scroll(e.wheelDelta));
 
-document.addEventListener('wheel', e=>{
-    apply_wheel(sick_pane, e.wheelDelta);
-    apply_wheel(gears, e.wheelDelta);
-    apply_wheel(form_btn_lines, e.wheelDelta);
-});
+document.documentElement.style.setProperty('--app-height',
+    `${window.innerHeight}px`);
