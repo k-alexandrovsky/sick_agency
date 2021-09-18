@@ -428,9 +428,11 @@ const process_scroll = delta=>{
 
 const init_mobile = ()=>{
     document.addEventListener('touchstart', e=>{
+        e.preventDefault();
         const get_pos = _e=>_e.touches[0].pageY;
         let cur_pos = get_pos(e);
         const touch_move = _e=>{
+            _e.preventDefault();
             const pos = get_pos(_e);
             if (Math.abs(cur_pos - pos) < 2)
                 return;

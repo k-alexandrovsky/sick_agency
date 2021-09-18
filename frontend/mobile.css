@@ -9,6 +9,11 @@
         --form-width: 100vw;
     }
 
+    body {
+        touch-action: none;
+        overscroll-behavior: none;
+    }
+
     .logo > svg { width: 22vw; }
 
     .layout[data-layout="main"] {
