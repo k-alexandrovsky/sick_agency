@@ -506,6 +506,12 @@ body.enter .layout[data-layout="main"] { opacity: 1; }
     margin: 5rem 1.5rem -0.5rem -0.5rem;
 }
 #contact_form .options > * { margin: 0.5rem; }
+#contact_form .options > :first-child { margin-right: 3rem; }
+
+#contact_form .gdpr {
+    font-size: 1.2rem;
+    margin-top: 8rem;
+}
 
 .btn_checkbox {
     position: relative;
