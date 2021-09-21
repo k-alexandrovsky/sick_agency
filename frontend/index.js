@@ -173,6 +173,10 @@ const IS_MOBILE = window.matchMedia('(max-width: 767px)').matches;
 
 const $ = sel=>document.querySelector(sel);
 const $$ = sel=>[...document.querySelectorAll(sel)];
+const hex_to_rgb = hex=>{
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return [...result].slice(1).map(h=>parseInt(h, 16));
+};
 
 const init_layout = ()=>{
     const items = $$('[data-item]')
@@ -484,7 +488,11 @@ window.onload = ()=>{
 
     const [bg, fg] = colors[Math.floor(Math.random() * colors.length)];
     document.documentElement.style.setProperty('--background', bg);
+    document.documentElement.style.setProperty('--background-rgb',
+        `${hex_to_rgb(bg)}`);
     document.documentElement.style.setProperty('--foreground', fg);
+    document.documentElement.style.setProperty('--foregroung-rgb',
+        `${hex_to_rgb(fg)}`);
 
     form_success.el = new Array(4).fill()
         .map((_, i)=>$(`.content_submitted > div:nth-child(${i+1})`));

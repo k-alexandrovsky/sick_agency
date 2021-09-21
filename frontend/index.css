@@ -464,9 +464,13 @@ body.enter .layout[data-layout="main"] { opacity: 1; }
     color: var(--background);
     background-color: transparent;
     border: none;
-    border-bottom: 2px solid var(--background);
+    border-bottom: 2px solid rgba(var(--background-rgb), 0.3);
     border-radius: 0;
     outline: none;
+    transition: border-color 200ms ease;
+}
+#contact_form .content > input:hover, #contact_form .content > input:focus {
+    border-color: var(--background);
 }
 #contact_form input::placeholder {
     color: inherit;
@@ -533,8 +537,16 @@ body.enter .layout[data-layout="main"] { opacity: 1; }
     line-height: 5.4rem;
     border: 1px solid var(--background);
     border-radius: 999px;
+    transition: color 200ms ease, border-color 200ms ease,
+        background-color 200ms ease;
+}
+.btn_checkbox:hover label {
+    border-color: var(--accent);
+    background-color: var(--accent);
+    color: white;
 }
 .btn_checkbox input:checked + label {
+    border-color: var(--background);
     background-color: var(--background);
     color: var(--foreground);
 }
