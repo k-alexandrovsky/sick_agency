@@ -320,7 +320,7 @@ const setup_features_drag = f=>{
         const [cursor_coord, cursor_dir] = features.el.parentElement.classList
             .contains('horizontal') ? ['Y', -1] : ['X', 1];
         const get_pos = _e=>_e.touches ? _e.touches[0]['page'+cursor_coord]
-            : e['client'+cursor_coord]
+            : _e['client'+cursor_coord]
         e.preventDefault();
         e.stopPropagation();
         init_cursor_pos = get_pos(e);
