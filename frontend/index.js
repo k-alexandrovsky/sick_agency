@@ -327,6 +327,8 @@ const setup_logo_drag = el=>{
         dragged = false;
     });
     el.onmousedown = el.ontouchstart = e=>{
+        e.preventDefault();
+        e.stopPropagation()
         const get_pos = _e=>_e.touches
             ? [_e.touches[0].pageX, _e.touches[0].pageY]
             : [_e.clientX, _e.clientY];
@@ -335,8 +337,6 @@ const setup_logo_drag = el=>{
         const init_top = parseFloat(el.style.getPropertyValue('top'));
         const mouse_move = _e=>{
             dragged = true;
-            e.preventDefault();
-            e.stopPropagation();
             el.classList.add('dragging');
             const [x, y] = get_pos(_e);
             const left = clamp(5, init_left + (x - init_x)
