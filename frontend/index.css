@@ -50,13 +50,20 @@ body.show_form #contact_form { transform: translateX(0); }
     justify-content: center;
     position: fixed;
     z-index: 10;
-    left: var(--left);
-    top: var(--top);
     opacity: 0;
     transition: opacity 400ms ease, transform 500ms ease-in;
     transform: rotate(calc(var(--rotate) / -0.5)) scale(5);
 }
 .logo > svg { width: 6.3vw; }
+@keyframes squish {
+    0%, 50% { transform: scaleX(1) scaleY(1); }
+    25% { transform: scaleX(0.95) scaleY(1.05); }
+    75% { transform: scaleX(1.05) scaleY(0.95); }
+}
+.logo.dragging > svg {
+    animation: squish 1s linear 0ms infinite normal forwards;
+    animation-direction: normal, reverse;
+}
 body.enter .logo {
     opacity: 1;
     transform: rotate(var(--rotate));

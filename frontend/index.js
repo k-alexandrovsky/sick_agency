@@ -177,6 +177,7 @@ const hex_to_rgb = hex=>{
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return [...result].slice(1).map(h=>parseInt(h, 16));
 };
+const clamp = (min, v, max)=>Math.max(min, Math.min(v, max));
 
 const init_layout = ()=>{
     const items = $$('[data-item]')
@@ -317,18 +318,68 @@ const dbg_setup = ()=>{
     });
 };
 
+const setup_logo_drag = el=>{
+    const logo_svg = el.querySelector('svg');
+    let dragged = false;
+    el.addEventListener('click', e=>{
+        if (dragged)
+            e.preventDefault();
+        dragged = false;
+    });
+    el.onmousedown = el.ontouchstart = e=>{
+        const get_pos = _e=>_e.touches
+            ? [_e.touches[0].pageX, _e.touches[0].pageY]
+            : [_e.clientX, _e.clientY];
+        const [init_x, init_y] = get_pos(e);
+        const init_left = parseFloat(el.style.getPropertyValue('left'));
+        const init_top = parseFloat(el.style.getPropertyValue('top'));
+        const mouse_move = _e=>{
+            dragged = true;
+            e.preventDefault();
+            e.stopPropagation();
+            el.classList.add('dragging');
+            const [x, y] = get_pos(_e);
+            const left = clamp(5, init_left + (x - init_x)
+                / document.documentElement.clientWidth * 100, 90);
+            el.style.setProperty('left', `${left}vw`);
+            const top = clamp(5, init_top + (y - init_y)
+                / document.documentElement.clientHeight * 100, 80);
+            el.style.setProperty('top', `${top}vh`);
+
+        };
+        const mouse_up = ()=>{
+            const on_squish_end = ()=>{
+                logo_svg.removeEventListener('animationiteration',
+                    on_squish_end);
+                el.classList.remove('dragging');
+            };
+            logo_svg.addEventListener('animationiteration', on_squish_end);
+            document.body.classList.remove('dragging');
+            document.removeEventListener('mouseup', mouse_up);
+            document.removeEventListener('touchend', mouse_up);
+            document.removeEventListener('mousemove', mouse_move);
+            document.removeEventListener('touchmove', mouse_move);
+        };
+        document.body.classList.add('dragging');
+        document.addEventListener('mousemove', mouse_move);
+        document.addEventListener('touchmove', mouse_move);
+        document.addEventListener('mouseup', mouse_up);
+        document.addEventListener('touchend', mouse_up);
+    };
+    el.ondragstart = ()=>false;
+};
+
 const setup_features_drag = f=>{
     const el = f.el;
-    let init_cursor_pos, init_pos;
     el.onmousedown = el.ontouchstart = e=>{
-        const [cursor_coord, cursor_dir] = features.el.parentElement.classList
-            .contains('horizontal') ? ['Y', -1] : ['X', 1];
-        const get_pos = _e=>_e.touches ? _e.touches[0]['page'+cursor_coord]
-            : _e['client'+cursor_coord]
         e.preventDefault();
         e.stopPropagation();
-        init_cursor_pos = get_pos(e);
-        init_pos = f.pos;
+        const get_pos = _e=>_e.touches
+            ? _e.touches[0]['page'+cursor_coord]
+            : _e['client'+cursor_coord];
+        const init_cursor_pos = get_pos(e), init_pos = f.pos;
+        const [cursor_coord, cursor_dir] = features.el.parentElement.classList
+            .contains('horizontal') ? ['Y', -1] : ['X', 1];
         const mouse_move = _e=>{
             f.override_pos = init_pos
                 + (get_pos(_e) - init_cursor_pos) * cursor_dir;
@@ -420,8 +471,11 @@ const setup_form = ()=>{
 };
 
 const apply_wheel = (f, delta)=>{
-    f.velocity = Math.max(-f.params.v_max,
-        Math.min(f.velocity+delta/f.params.wheel_factor, f.params.v_max));
+    f.velocity = clamp(
+        -f.params.v_max,
+        f.velocity+delta/f.params.wheel_factor,
+        f.params.v_max,
+    );
 };
 
 const process_scroll = delta=>{
@@ -468,9 +522,10 @@ window.onload = ()=>{
     setup_features_drag(features);
 
     const logo = $('.logo');
-    logo.style.setProperty('--left', `${Math.random()*25+5}vw`);
-    logo.style.setProperty('--top', `${Math.random()*25+5}vh`);
+    logo.style.setProperty('left', `${Math.random()*25+5}vw`);
+    logo.style.setProperty('top', `${Math.random()*25+5}vh`);
     logo.style.setProperty('--rotate', `${Math.random()*150-75}deg`);
+    setup_logo_drag(logo);
 
     const form_btn = $('.form_btn');
     form_btn.style.setProperty('--rotate', `${Math.random()*60-30}deg`);
