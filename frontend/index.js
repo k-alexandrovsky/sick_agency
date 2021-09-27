@@ -85,19 +85,6 @@ const layouts = [
         ['feature_pane'],
     ],
     ['H',
-        ['feature_pane'],
-        ['H',
-            ['V',
-                ['H',
-                    ['description', 2],
-                    ['gears', 1, 'horizontal'],
-                ],
-                ['splash', 2],
-            ],
-            ['sick_pane'],
-        ],
-    ],
-    ['H',
         ['V',
             ['H',
                 ['splash', 2],
@@ -179,6 +166,16 @@ const hex_to_rgb = hex=>{
 };
 const clamp = (min, v, max)=>Math.max(min, Math.min(v, max));
 
+const get_next_random_layout = layouts=>{
+    const last_shown = +(sessionStorage.last_layout||'-1');
+    let idx;
+    do {
+        idx = Math.floor(Math.random()*layouts.length);
+    } while (idx==last_shown);
+    sessionStorage.last_layout = idx;
+    return idx;
+};
+
 const init_layout = ()=>{
     const items = $$('[data-item]')
         .reduce((o, e)=>(o[e.getAttribute('data-item')] = e, o), {});
@@ -218,8 +215,9 @@ const init_layout = ()=>{
     [...main_layout.children].forEach(c=>c.remove());
     const qs_layout = new URL(location.href).searchParams.get('layout');
     const _layouts = IS_MOBILE ? mobile_layouts : layouts;
-    const selected_idx = qs_layout ? (+qs_layout) % _layouts.length
-        : Math.floor(Math.random()*_layouts.length);
+    const selected_idx = qs_layout
+        ? (+qs_layout) % _layouts.length
+        : get_next_random_layout(_layouts);
     process_layout(main_layout, ..._layouts[selected_idx]);
 };
 
