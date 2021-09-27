@@ -17,13 +17,13 @@ const gears = {
         v_max: 2,
         slowdown: 0.98,
         wheel_factor: 270,
-    }
+    },
 };
 const features = {
     pos: 0,
     params: {
         velocity: 1,
-    }
+    },
 };
 const form_btn_lines = {
     pos: 0,
@@ -34,7 +34,7 @@ const form_btn_lines = {
         v_max: 5,
         slowdown: 0.95,
         wheel_factor: 50,
-    }
+    },
 };
 const form_success = {
     psize: ['offsetWidth', 'offsetHeight', 'offsetWidth', 'offsetHeight'],
@@ -119,7 +119,7 @@ const layouts = [
                     ['gears', 2],
                     ['description', 3],
                 ],
-                ['splash', 2]
+                ['splash', 2],
             ],
         ],
     ],
@@ -163,7 +163,7 @@ const mobile_layouts = [
                     ['description', 1],
                 ],
                 ['feature_pane'],
-                2
+                2,
             ],
         ],
     ],
@@ -319,16 +319,20 @@ const dbg_setup = ()=>{
 };
 
 const setup_logo_drag = el=>{
-    const logo_svg = el.querySelector('svg');
     let dragged = false;
     el.addEventListener('click', e=>{
         if (dragged)
             e.preventDefault();
         dragged = false;
     });
+    const logo_svg = el.querySelector('svg');
+    const on_squish_end = ()=>{
+        logo_svg.removeEventListener('animationiteration', on_squish_end);
+        el.classList.remove('dragging');
+    };
     el.onmousedown = el.ontouchstart = e=>{
         e.preventDefault();
-        e.stopPropagation()
+        e.stopPropagation();
         const get_pos = _e=>_e.touches
             ? [_e.touches[0].pageX, _e.touches[0].pageY]
             : [_e.clientX, _e.clientY];
@@ -345,14 +349,8 @@ const setup_logo_drag = el=>{
             const top = clamp(5, init_top + (y - init_y)
                 / document.documentElement.clientHeight * 100, 80);
             el.style.setProperty('top', `${top}vh`);
-
         };
         const mouse_up = ()=>{
-            const on_squish_end = ()=>{
-                logo_svg.removeEventListener('animationiteration',
-                    on_squish_end);
-                el.classList.remove('dragging');
-            };
             logo_svg.addEventListener('animationiteration', on_squish_end);
             document.body.classList.remove('dragging');
             document.removeEventListener('mouseup', mouse_up);
@@ -447,7 +445,7 @@ const setup_form = ()=>{
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                     ...Object.fromEntries(Object.keys(validators)
@@ -455,7 +453,7 @@ const setup_form = ()=>{
                     interest: [...document.querySelectorAll(
                         '#contact_form .options input[type="checkbox"]')]
                         .filter(c=>c.checked).map(c=>c.getAttribute('name')),
-                })
+                }),
             });
             if (!res.ok)
                 throw res;
