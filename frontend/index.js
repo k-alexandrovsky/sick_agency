@@ -62,10 +62,10 @@ const layouts = [
         ['sick_pane'],
         ['V',
             ['H',
-                ['splash', 2],
+                ['splash', {flex: '2 2 0'}],
                 ['V',
-                    ['gears', 1],
-                    ['description', 2],
+                    ['gears', {flex: '1 1 0'}],
+                    ['description', {flex: '2 2 0'}],
                 ],
             ],
             ['feature_pane'],
@@ -76,10 +76,10 @@ const layouts = [
             ['sick_pane'],
             ['H',
                 ['V',
-                    ['description', 1],
-                    ['gears', 1],
+                    ['description', {flex: '1 1 0'}],
+                    ['gears', {flex: '1 1 0'}],
                 ],
-                ['splash', 2]
+                ['splash', {flex: '2 2 0'}]
             ]
         ],
         ['feature_pane'],
@@ -87,10 +87,10 @@ const layouts = [
     ['H',
         ['V',
             ['H',
-                ['splash', 2],
+                ['splash', {flex: '2 2 0'}],
                 ['V',
-                    ['description', 2],
-                    ['gears', 3],
+                    ['description', {flex: '2 2 0'}],
+                    ['gears', {flex: '3 3 0'}],
                 ],
             ],
             ['sick_pane'],
@@ -103,10 +103,10 @@ const layouts = [
             ['feature_pane'],
             ['H',
                 ['V',
-                    ['gears', 2],
-                    ['description', 3],
+                    ['gears', {flex: '2 2 0'}],
+                    ['description', {flex: '3 3 0'}],
                 ],
-                ['splash', 2],
+                ['splash', {flex: '2 2 0'}],
             ],
         ],
     ],
@@ -118,39 +118,39 @@ const mobile_layouts = [
             ['V',
                 ['feature_pane'],
                 ['V',
-                    ['description', 1],
-                    ['gears', 1, 'horizontal'],
+                    ['description', {flex: '1 1 0'}],
+                    ['gears', {flex: '1 1 0'}, 'horizontal'],
                 ],
             ],
-            2,
+            {flex: '2 2 0'},
         ],
-        ['splash', 1],
+        ['splash', {flex: '1 1 0'}],
     ],
     ['V',
-        ['splash', 1],
+        ['splash', {flex: '1 1 0'}],
         ['H',
             ['V',
                 ['V',
-                    ['description', 1],
-                    ['gears', 1, 'horizontal'],
+                    ['description', {flex: '1 1 0'}],
+                    ['gears', {flex: '1 1 0'}, 'horizontal'],
                 ],
                 ['feature_pane'],
             ],
             ['sick_pane'],
-            2,
+            {flex: '2 2 0'},
         ],
     ],
     ['V',
         ['sick_pane'],
         ['V',
-            ['splash', 1],
+            ['splash', {flex: '1 1 0'}],
             ['H',
                 ['V',
-                    ['gears', 1, 'horizontal'],
-                    ['description', 1],
+                    ['gears', {flex: '1 1 0'}, 'horizontal'],
+                    ['description', {flex: '1 1 0'}],
                 ],
                 ['feature_pane'],
-                2,
+                {flex: '2 2 0'},
             ],
         ],
     ],
@@ -176,38 +176,51 @@ const get_next_random_layout = layouts=>{
     return idx;
 };
 
+const setup_handle_drag = (type, handle, child1_node, child2_node)=>{
+    // TODO
+};
+
 const init_layout = ()=>{
     const items = $$('[data-item]')
         .reduce((o, e)=>(o[e.getAttribute('data-item')] = e, o), {});
-    const apply_flex = (n, flex)=>{
-        if (flex)
-            n.style.setProperty('flex', `${flex} ${flex} 0`);
+    const apply_props = (n, props = {})=>new Set([
+        ...Object.keys(props),
+        ...(n.getAttribute('style')||'').split(';')
+            .filter(Boolean).map(p=>p.split(':')[0]),
+    ]).forEach(p=>{
+        if (props[p])
+            n.style.setProperty(p, props[p]);
         else
-            n.style.removeProperty('flex');
-        return n;
-    };
-    const process_layout = (node, type, child1, child2, flex=1)=>{
+            n.style.removeProperty(p);
+    });
+    const process_layout = (node, type, child1, child2,
+        props = {flex: '1 1 0'})=>
+    {
         const process_child = child=>{
             if (/[VH]/.test(child[0])) {
                 const layout = node.appendChild(document.createElement('div'));
                 layout.classList.add('layout');
-                process_layout(layout, ...child);
+                return process_layout(layout, ...child);
             } else {
-                const [key, flex, variant] = child;
-                const child_n = node.appendChild(apply_flex(items[key], flex));
+                const [key, props, variant] = child;
+                apply_props(items[key], props);
+                const child_n = node.appendChild(items[key]);
                 if (variant)
                     child_n.setAttribute('data-variant', variant);
                 else
                     child_n.removeAttribute('data-variant');
+                return child_n;
             }
         };
         node.classList.toggle('vertical', type==='V');
         node.classList.toggle('horizontal', type==='H');
-        apply_flex(node, flex);
-        process_child(child1);
+        apply_props(node, props);
+        const child1_node = process_child(child1);
         const handle = node.appendChild(document.createElement('div'));
         handle.classList.add('handle');
-        process_child(child2);
+        const child2_node = process_child(child2);
+        setup_handle_drag(type, handle, child1_node, child2_node);
+        return node;
     };
     for (const k in items)
         items[k].remove();
@@ -370,12 +383,12 @@ const setup_features_drag = f=>{
     el.onmousedown = el.ontouchstart = e=>{
         e.preventDefault();
         e.stopPropagation();
+        const [cursor_coord, cursor_dir] = features.el.parentElement.classList
+            .contains('horizontal') ? ['Y', -1] : ['X', 1];
         const get_pos = _e=>_e.touches
             ? _e.touches[0]['page'+cursor_coord]
             : _e['client'+cursor_coord];
         const init_cursor_pos = get_pos(e), init_pos = f.pos;
-        const [cursor_coord, cursor_dir] = features.el.parentElement.classList
-            .contains('horizontal') ? ['Y', -1] : ['X', 1];
         const mouse_move = _e=>{
             f.override_pos = init_pos
                 + (get_pos(_e) - init_cursor_pos) * cursor_dir;
