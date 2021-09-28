@@ -61,7 +61,7 @@ body.show_form #contact_form { transform: translateX(0); }
     z-index: 10;
     opacity: 0;
     transition: opacity 400ms ease, transform 500ms ease-in;
-    transition-delay: 2500ms;
+    transition-delay: 2000ms;
     transform: rotate(calc(var(--rotate) / -0.5)) scale(5);
     transform-origin: 50% 50%;
     --rotate: 0deg;
@@ -108,7 +108,7 @@ body.enter .logo {
 }
 .form_btn.main:hover { transition: none !important; }
 body.before_enter .form_btn.main {
-    transition: transform 1000ms var(--overshoot) 3000ms;
+    transition: transform 1000ms var(--overshoot) 2750ms;
 }
 body.enter .form_btn.main {
     transform: translateX(0) rotate(var(--rotate));
@@ -165,17 +165,17 @@ body.enter .form_btn.main {
 .layout > * {
     flex: 0 0 auto;
     transition: transform 500ms ease, opacity 300ms ease;
-    transition-delay: 500ms;
+    transition-delay: 400ms;
     opacity: 0;
 }
 .layout .layout > * {
-    transition-delay: 1000ms;
+    transition-delay: 800ms;
 }
 .layout .layout .layout > * {
-    transition-delay: 1500ms;
+    transition-delay: 1200ms;
 }
 .layout .layout .layout .layout > * {
-    transition-delay: 2000ms;
+    transition-delay: 1600ms;
 }
 .layout.horizontal > :first-child {
     transform: translate(-5vw, 0vw);
