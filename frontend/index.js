@@ -57,32 +57,41 @@ const all_params = {
     form_success,
 };
 
+const sick_pane_props_v = {'--size': '9.8vw', '--limits': '4:20'};
+const sick_pane_props_h = {'--size': '11.2vw', '--limits': '5:30'};
+const feature_pane_props_v = {'--size': '6.1vw', '--limits': '3:15'};
+const feature_pane_props_h = {'--size': '8vw', '--limits': '4:20'};
+
 const layouts = [
     ['H',
-        ['sick_pane', {'--size': '11.2vw'}],
+        ['sick_pane', sick_pane_props_h],
         ['V',
             ['H',
                 ['splash', {flex: '2 2 0'}],
                 ['V',
                     ['gears', {flex: '1 1 0'}],
                     ['description', {flex: '2 2 0'}],
+                    {'--limits': '0.25:1.5'},
                 ],
+                {'--limits': '1:2.5'},
             ],
-            ['feature_pane', {'--size': '6.1vw'}],
+            ['feature_pane', feature_pane_props_v],
         ],
     ],
     ['H',
         ['V',
-            ['sick_pane', {'--size': '9.8vw'}],
+            ['sick_pane', sick_pane_props_v],
             ['H',
                 ['V',
                     ['description', {flex: '1 1 0'}],
                     ['gears', {flex: '1 1 0'}],
+                    {'--limits': '0.5:1.5'},
                 ],
-                ['splash', {flex: '2 2 0'}]
+                ['splash', {flex: '2 2 0'}],
+                {'--limits': '0.33:1'},
             ]
         ],
-        ['feature_pane', {'--size': '8vw'}],
+        ['feature_pane', feature_pane_props_h],
     ],
     ['H',
         ['V',
@@ -91,40 +100,50 @@ const layouts = [
                 ['V',
                     ['description', {flex: '2 2 0'}],
                     ['gears', {flex: '3 3 0'}],
+                    {'--limits': '0.33:1.5'},
                 ],
+                {'--limits': '1:2.5'},
             ],
-            ['sick_pane', {'--size': '9.8vw'}],
+            ['sick_pane', sick_pane_props_v],
         ],
-        ['feature_pane', {'--size': '8vw'}],
+        ['feature_pane', feature_pane_props_h],
     ],
     ['H',
-        ['sick_pane', {'--size': '11.2vw'}],
+        ['sick_pane', sick_pane_props_h],
         ['V',
-            ['feature_pane', {'--size': '6.1vw'}],
+            ['feature_pane', feature_pane_props_v],
             ['H',
                 ['V',
                     ['gears', {flex: '2 2 0'}],
                     ['description', {flex: '3 3 0'}],
+                    {'--limits': '0.33:2'},
                 ],
                 ['splash', {flex: '2 2 0'}],
+                {'--limits': '0.33:1'},
             ],
         ],
     ],
 ];
+
+const sick_pane_props_m = {'--size': '20vw', '--limits': '10:30'};
+const feature_pane_props_m = {'--size': '17.5vw', '--limits': '10:25'};
+
 const mobile_layouts = [
     ['V',
         ['H',
-            ['sick_pane'],
+            ['sick_pane', sick_pane_props_m],
             ['V',
-                ['feature_pane'],
+                ['feature_pane', feature_pane_props_m],
                 ['V',
                     ['description', {flex: '1 1 0'}],
                     ['gears', {flex: '1 1 0'}, 'horizontal'],
+                    {'--limits': '0.5:2'},
                 ],
             ],
             {flex: '2 2 0'},
         ],
         ['splash', {flex: '1 1 0'}],
+        {'--limits': '1:3'},
     ],
     ['V',
         ['splash', {flex: '1 1 0'}],
@@ -133,25 +152,29 @@ const mobile_layouts = [
                 ['V',
                     ['description', {flex: '1 1 0'}],
                     ['gears', {flex: '1 1 0'}, 'horizontal'],
+                    {'--limits': '0.5:2'},
                 ],
-                ['feature_pane'],
+                ['feature_pane', feature_pane_props_m],
             ],
-            ['sick_pane'],
+            ['sick_pane', sick_pane_props_m],
             {flex: '2 2 0'},
         ],
+        {'--limits': '0.33:1'},
     ],
     ['V',
-        ['sick_pane'],
+        ['sick_pane', sick_pane_props_m],
         ['V',
             ['splash', {flex: '1 1 0'}],
             ['H',
                 ['V',
                     ['gears', {flex: '1 1 0'}, 'horizontal'],
                     ['description', {flex: '1 1 0'}],
+                    {'--limits': '0.5:2'},
                 ],
-                ['feature_pane'],
+                ['feature_pane', feature_pane_props_m],
                 {flex: '2 2 0'},
             ],
+            {'--limits': '0.3:0.8'},
         ],
     ],
 ];
@@ -176,8 +199,67 @@ const get_next_random_layout = layouts=>{
     return idx;
 };
 
-const setup_handle_drag = (type, handle, child1_node, child2_node)=>{
-    // TODO
+const setup_handle_drag = (type, handle)=>{
+    const [coord, size_prop] = {H: ['X', 'Width'], V: ['Y', 'Height']}[type];
+    handle.onmousedown = handle.ontouchstart = e=>{
+        e.preventDefault();
+        e.stopPropagation();
+        const get_pos = _e=>_e.touches
+            ? _e.touches[0]['page'+coord]
+            : _e['client'+coord];
+        const init_pos = get_pos(e);
+        const layout = handle.parentElement;
+        const [sized_child] = [...layout.children].filter(c=>c!=handle
+            && c.style.getPropertyValue('--size'));
+        let mouse_move;
+        if (sized_child) {
+            const init_size = parseFloat(sized_child.style
+                .getPropertyValue('--size'));
+            const limits = (sized_child.style.getPropertyValue('--limits')
+                || '-Infinity:+Infinity').split(':').map(l=>+l);
+            const dir = handle.nextElementSibling==sized_child ? -1 : 1;
+            mouse_move = _e=>{
+                const new_size = clamp(
+                    limits[0],
+                    (get_pos(_e) - init_pos) * dir
+                        / document.documentElement.clientWidth * 100
+                        + init_size,
+                    limits[1]
+                );
+                sized_child.style.setProperty('--size', new_size+'vw');
+            };
+        } else {
+            const [min_ratio, max_ratio] = (handle.parentElement.style
+                .getPropertyValue('--limits') || '-Infinity:+Infinity')
+                    .split(':').map(l=>+l);
+            const [child1, child2] = [...layout.children].filter(c=>c!=handle);
+            const set_flex = (n, v)=>n.style
+                .setProperty('flex', `${v} ${v} 0`);
+            const size1 = child1['offset'+size_prop];
+            const size2 = child2['offset'+size_prop];
+            mouse_move = _e=>{
+                const delta = get_pos(_e) - init_pos;
+                const new_ratio = clamp(min_ratio,
+                    (size1 + delta) / (size2 - delta), max_ratio);
+                set_flex(child1, new_ratio > 1 ? new_ratio : 1);
+                set_flex(child2, new_ratio > 1 ? 1 : 1 / new_ratio);
+            };
+        }
+        const mouse_up = ()=>{
+            document.body.style.removeProperty('cursor');
+            document.removeEventListener('mouseup', mouse_up);
+            document.removeEventListener('touchend', mouse_up);
+            document.removeEventListener('mousemove', mouse_move);
+            document.removeEventListener('touchmove', mouse_move);
+        };
+        document.body.style.setProperty('cursor',
+            getComputedStyle(handle).cursor);
+        document.addEventListener('mousemove', mouse_move);
+        document.addEventListener('touchmove', mouse_move);
+        document.addEventListener('mouseup', mouse_up);
+        document.addEventListener('touchend', mouse_up);
+    };
+    handle.ondragstart = ()=>false;
 };
 
 const init_layout = ()=>{
@@ -193,14 +275,13 @@ const init_layout = ()=>{
         else
             n.style.removeProperty(p);
     });
-    const process_layout = (node, type, child1, child2,
-        props = {flex: '1 1 0'})=>
-    {
+    const process_layout = (node, type, child1, child2, props)=>{
+        props = {flex: '1 1 0', ...props};
         const process_child = child=>{
             if (/[VH]/.test(child[0])) {
                 const layout = node.appendChild(document.createElement('div'));
                 layout.classList.add('layout');
-                return process_layout(layout, ...child);
+                process_layout(layout, ...child);
             } else {
                 const [key, props, variant] = child;
                 apply_props(items[key], props);
@@ -209,18 +290,16 @@ const init_layout = ()=>{
                     child_n.setAttribute('data-variant', variant);
                 else
                     child_n.removeAttribute('data-variant');
-                return child_n;
             }
         };
         node.classList.toggle('vertical', type==='V');
         node.classList.toggle('horizontal', type==='H');
         apply_props(node, props);
-        const child1_node = process_child(child1);
+        process_child(child1);
         const handle = node.appendChild(document.createElement('div'));
         handle.classList.add('handle');
-        const child2_node = process_child(child2);
-        setup_handle_drag(type, handle, child1_node, child2_node);
-        return node;
+        process_child(child2);
+        setup_handle_drag(type, handle);
     };
     for (const k in items)
         items[k].remove();
@@ -231,6 +310,7 @@ const init_layout = ()=>{
     const selected_idx = qs_layout
         ? (+qs_layout) % _layouts.length
         : get_next_random_layout(_layouts);
+    console.log(`layout #${selected_idx}`);
     process_layout(main_layout, ..._layouts[selected_idx]);
 };
 
@@ -350,6 +430,12 @@ const setup_logo_drag = el=>{
         const [init_x, init_y] = get_pos(e);
         const init_left = parseFloat(el.style.getPropertyValue('left'));
         const init_top = parseFloat(el.style.getPropertyValue('top'));
+        const on_wheel = _e=>{
+            _e.stopPropagation();
+            const old_scale = (+el.style.getPropertyValue('--scale'))||1;
+            const new_scale = clamp(0.75, old_scale + _e.wheelDelta / 500, 4);
+            el.style.setProperty('--scale', new_scale);
+        };
         const mouse_move = _e=>{
             dragged = true;
             el.classList.add('dragging');
@@ -363,12 +449,15 @@ const setup_logo_drag = el=>{
         };
         const mouse_up = ()=>{
             logo_svg.addEventListener('animationiteration', on_squish_end);
+            document.removeEventListener('wheel', on_wheel, {capture: true});
             document.body.classList.remove('dragging');
             document.removeEventListener('mouseup', mouse_up);
             document.removeEventListener('touchend', mouse_up);
             document.removeEventListener('mousemove', mouse_move);
             document.removeEventListener('touchmove', mouse_move);
         };
+        document.addEventListener('wheel', on_wheel,
+            {passive: false, capture: true});
         document.body.classList.add('dragging');
         document.addEventListener('mousemove', mouse_move);
         document.addEventListener('touchmove', mouse_move);

@@ -58,6 +58,8 @@ body.show_form #contact_form { transform: translateX(0); }
     opacity: 0;
     transition: opacity 400ms ease, transform 500ms ease-in;
     transform: rotate(calc(var(--rotate) / -0.5)) scale(5);
+    --scale: 1;
+    --scale-origin: 50% 50%;
 }
 .logo > svg { width: 6.3vw; }
 @keyframes squish {
@@ -71,7 +73,8 @@ body.show_form #contact_form { transform: translateX(0); }
 }
 body.enter .logo {
     opacity: 1;
-    transform: rotate(var(--rotate));
+    transform: rotate(var(--rotate)) scale(var(--scale));
+    transform-origin: 50% 50%;
 }
 
 .form_btn {
@@ -158,7 +161,7 @@ body.enter .layout[data-layout="main"] { opacity: 1; }
     width: 1.6rem;
     height: 100%;
     margin: 0 -0.8rem;
-    /* cursor: col-resize; */
+    cursor: col-resize;
 }
 .layout.horizontal > .handle::before {
     border-left: var(--borders) solid var(--foreground);
@@ -168,7 +171,7 @@ body.enter .layout[data-layout="main"] { opacity: 1; }
     width: 100%;
     height: 1.6rem;
     margin: -0.8rem 0;
-    /* cursor: row-resize; */
+    cursor: row-resize;
 }
 .layout.vertical > .handle::before {
     width: 100%;
@@ -208,7 +211,11 @@ body.enter .layout[data-layout="main"] { opacity: 1; }
     transform: translateY(var(--translate)) skewY(var(--skew));
 }
 
+[data-item="splash"] { position: relative; }
 .splash {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: calc(100% - 3.2rem);
     height: calc(100% - 3.2rem);
     margin: 1.6rem;
@@ -261,15 +268,18 @@ body.enter .layout[data-layout="main"] { opacity: 1; }
     margin: calc(var(--size) * -0.2) 0.8vw calc(var(--size) * -0.2) 0;
 }
 
-.gears {
+.gears { --rotate: 0deg; }
+.gears > div {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    box-sizing: border-box;
+    height: 100%;
     padding: 3.6rem 3.6rem 4.2rem 3.6rem;
-    --rotate: 0deg;
+    background-color: var(--background);
 }
-.gears[data-variant="horizontal"] { flex-direction: row; }
+.gears[data-variant="horizontal"] > div { flex-direction: row; }
 .gear {
     position: relative;
     display: block;
@@ -307,8 +317,7 @@ body.enter .layout[data-layout="main"] { opacity: 1; }
 
 .description {
     position: relative;
-    z-index: 1;
-    padding: 3.6rem 3.6rem 4.2rem 3.6rem;
+    overflow: hidden;
     letter-spacing: -0.01em;
     font-size: 2.4rem;
     line-height: 1.33;
