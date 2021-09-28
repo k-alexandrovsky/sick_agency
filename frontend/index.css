@@ -33,8 +33,6 @@ html {
 
 body {
     background-color: black;
-}
-body, .form_btn.form:not(.valid) {
     cursor: url("data:image/svg+xml,%3Csvg width='35' height='39' viewBox='0 0 35 39' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.00246 10.1597C3.88536 6.31253 7.97692 3.78126 11.3673 5.60346L28.2014 14.6513C31.5918 16.4735 31.7381 21.2826 28.4649 23.3076L12.2121 33.3624C8.93888 35.3875 4.70096 33.1097 4.58386 29.2625L4.00246 10.1597Z' fill='%230029FF'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M13.2609 2.07988L30.0951 11.1277C36.1977 14.4077 36.4612 23.064 30.5693 26.709L14.3166 36.7639C8.42473 40.4089 0.796475 36.3089 0.585707 29.3839L0.0043 10.2812C-0.206468 3.3562 7.15833 -1.20008 13.2609 2.07988ZM11.3672 5.60323C7.97691 3.78102 3.88536 6.31229 4.00245 10.1595L4.58386 29.2623C4.70095 33.1095 8.93887 35.3872 12.2121 33.3622L28.4649 23.3073C31.7381 21.2823 31.5917 16.4733 28.2014 14.6511L11.3672 5.60323Z' fill='white'/%3E%3C/svg%3E%0A") 6 4, default;
 }
 body.dragging * {
@@ -152,6 +150,7 @@ body.enter .form_btn.main {
     border-color: var(--background);
     background-color: transparent;
     opacity: 0.3;
+    pointer-events: none;
 }
 .form_btn.form:not(.valid) svg { fill: var(--background); }
 
