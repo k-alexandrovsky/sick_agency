@@ -120,8 +120,26 @@ body.enter .form_btn.main {
 }
 
 .form_btn.form {
+    overflow: hidden;
     transition: background-color 200ms ease, border-color 200ms ease,
         visibility 0ms linear 400ms;
+}
+.form_btn.form svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.form_btn.form.valid:hover svg {
+    transition: transform 300ms ease;
+}
+.form_btn.form svg:last-child {
+    transform: translateX(-100%);
+}
+.form_btn.form.valid:hover svg:first-child {
+    transform: translateX(100%);
+}
+.form_btn.form.valid:hover svg:last-child {
+    transform: translateX(0%);
 }
 .form_btn.form:not(.valid) {
     border-color: var(--background);
@@ -457,10 +475,19 @@ body.enter .layout[data-layout="main"] { opacity: 1; }
     border: 1px solid var(--background);
     border-radius: 999px;
     cursor: pointer;
+    transition: background-color 150ms ease, border-color 150ms ease;
+}
+#contact_form .close:hover {
+    background-color: var(--accent);
+    border-color: var(--accent);
 }
 #contact_form .close svg {
     width: 100%;
     stroke: var(--background);
+    transition: stroke 150ms ease;
+}
+#contact_form .close:hover svg {
+    stroke: white;
 }
 #contact_form .intro > span { text-transform: uppercase; }
 #contact_form .intro > svg {
