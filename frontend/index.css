@@ -99,6 +99,7 @@ body.enter .logo {
 .form_btn.main {
     transform: translateX(24.5rem) rotate(calc(var(--rotate) + 180deg));
 }
+.form_btn.main:hover { transition: none !important; }
 body.before_enter .form_btn.main {
     transition: transform 1s var(--overshoot) 0.5s;
 }

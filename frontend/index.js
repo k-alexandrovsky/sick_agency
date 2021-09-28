@@ -25,6 +25,10 @@ const features = {
         velocity: 1,
     },
 };
+const form_btn = {
+    pos: 0,
+    hovered: false,
+};
 const form_btn_lines = {
     pos: 0,
     velocity: 0.1,
@@ -349,8 +353,16 @@ const animation_loop = ()=>{
     features.el.style.setProperty('--translate', `${features.pos}px`);
     // FORM BTN LINES
     apply_accel(form_btn_lines, 360);
-    form_btn_lines.el.style.setProperty('--rotate2',
-        `${form_btn_lines.pos}deg`);
+    if (form_btn.hovered)
+    {
+        form_btn.el.style.setProperty('--rotate',
+            `${form_btn.pos + (form_btn.offset - form_btn_lines.pos)*2}deg`);
+        form_btn_lines.el.style.setProperty('--rotate2',
+            `${form_btn_lines.pos * 3 - form_btn.offset * 2}deg`);
+    } else {
+        form_btn_lines.el.style.setProperty('--rotate2',
+            `${form_btn_lines.pos}deg`);
+    }
     // FORM_SUCCESS
     if (document.body.classList.contains('show_form')) {
         for (let i=0; i<4; i++) {
@@ -625,9 +637,19 @@ window.onload = ()=>{
     logo.style.setProperty('--rotate', `${Math.random()*150-75}deg`);
     setup_logo_drag(logo);
 
-    const form_btn = $('.form_btn');
-    form_btn.style.setProperty('--rotate', `${Math.random()*60-30}deg`);
-    form_btn.addEventListener('click', ()=>{
+    form_btn.el = $('.form_btn');
+    form_btn.el.style.setProperty('--rotate',
+        `${form_btn.pos = Math.random()*60-30}deg`);
+    form_btn.el.addEventListener('mouseenter', ()=>{
+        form_btn.offset = form_btn_lines.pos;
+        form_btn.hovered = true;
+    });
+    form_btn.el.addEventListener('mouseleave', ()=>{
+        form_btn.pos = form_btn.pos + (form_btn.offset - form_btn_lines.pos)*2;
+        form_btn_lines.pos = form_btn_lines.pos * 3 - form_btn.offset * 2;
+        form_btn.hovered = false;
+    });
+    form_btn.el.addEventListener('click', ()=>{
         document.body.classList.add('show_form');
         v_glob = 0.2;
     });
