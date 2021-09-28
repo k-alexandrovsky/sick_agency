@@ -27,17 +27,17 @@
     <script type="text/javascript" src="index.js"></script>
   </head>
   <body>
-    <a class="logo" href=".">
+    <a class="logo pointer" href=".">
         <svg viewBox="0 0 120 196"><use href="sprites.svg#logo"></use></svg>
     </a>
-    <button class="form_btn main">
+    <button class="form_btn main pointer">
         TEXT<br/>US
         <svg viewBox="0 0 156 156">
             <use href="sprites.svg#form_btn_decoration"></use>
         </svg>
     </button>
     <form id="contact_form" autocomplete="off">
-        <button class="close" type="button">
+        <button class="close pointer" type="button">
             <svg viewBox="0 0 13 13">
                 <use href="sprites.svg#close"></use>
             </svg>
@@ -89,7 +89,7 @@
                     projects and great opportunities.<br>
                     Send your ideas, suggestions,<br>or questions to<br>
                     <br>
-                    <a href="mailto:sickpic@sick.agency">
+                    <a href="mailto:sickpic@sick.agency" class="pointer">
                         sickpic@sick.agency</a><br>
                 </span>
                 <br>
@@ -98,21 +98,21 @@
                     <use href="sprites.svg#arr_down"></use>
                 </svg>
             </div>
-            <input name="name" placeholder="NAME">
+            <input name="name" class="pointer" placeholder="NAME">
             <label class="error_label">
                 <span></span>
                 <svg viewBox="0 0 13 13">
                     <use href="sprites.svg#error"></use>
                 </svg>
             </label>
-            <input name="email" placeholder="EMAIL">
+            <input name="email" class="pointer" placeholder="EMAIL">
             <label class="error_label">
                 <span></span>
                 <svg viewBox="0 0 13 13">
                     <use href="sprites.svg#error"></use>
                 </svg>
             </label>
-            <input name="comment" placeholder="COMMENT">
+            <input name="comment" class="pointer" placeholder="COMMENT">
             <label class="error_label">
                 <span></span>
                 <svg viewBox="0 0 13 13">
@@ -122,35 +122,38 @@
             <div class="options">
                 <span>Choose your interest:</span>
                 <div class="btn_checkbox">
-                    <input type="checkbox" name="web_design">
+                    <input type="checkbox" class="pointer" name="web_design">
                     <label for="web_design">Web Design</label>
                 </div>
                 <div class="btn_checkbox">
-                    <input type="checkbox" name="app_design">
+                    <input type="checkbox" class="pointer" name="app_design">
                     <label for="app_design">App Design</label>
                 </div>
                 <div class="btn_checkbox">
-                    <input type="checkbox" name="branding">
+                    <input type="checkbox" class="pointer" name="branding">
                     <label for="branding">Branding</label>
                 </div>
                 <div class="btn_checkbox">
-                    <input type="checkbox" name="e_commerce">
+                    <input type="checkbox" class="pointer" name="e_commerce">
                     <label for="e_commerce">E-Commerce</label>
                 </div>
                 <div class="btn_checkbox">
-                    <input type="checkbox" name="interaction_design">
+                    <input type="checkbox" class="pointer"
+                        name="interaction_design">
                     <label for="interaction_design">Interaction Design</label>
                 </div>
                 <div class="btn_checkbox">
-                    <input type="checkbox" name="creative_concept">
+                    <input type="checkbox" class="pointer"
+                        name="creative_concept">
                     <label for="creative_concept">Creative Concept</label>
                 </div>
                 <div class="btn_checkbox">
-                    <input type="checkbox" name="graphic_design">
+                    <input type="checkbox" class="pointer"
+                        name="graphic_design">
                     <label for="graphic_design">Graphic Design</label>
                 </div>
                 <div class="btn_checkbox">
-                    <input type="checkbox" name="ux_design">
+                    <input type="checkbox" class="pointer" name="ux_design">
                     <label for="ux_design">UX Design</label>
                 </div>
             </div>
@@ -159,7 +162,7 @@
                 the processing and storage of your personal data
             </div>
         </div>
-        <button class="form_btn form" type="submit">
+        <button class="form_btn form pointer" type="submit">
             <svg viewBox="0 0 156 156">
                 <use href="sprites.svg#submit"></use>
             </svg>
@@ -201,7 +204,7 @@
                     <div class="gears" data-item="gears">
                         <div>
                             <a href="http://instagram.com/sick.ui"
-                                class="gear">
+                                class="gear pointer">
                                 <svg class="foreground" viewBox="0 0 232 232">
                                     <use href="sprites.svg#gear"></use>
                                 </svg>
@@ -210,7 +213,7 @@
                                 </svg>
                             </a>
                             <a href="https://dribbble.com/sick-agency"
-                                class="gear">
+                                class="gear pointer">
                                 <svg class="foreground" viewBox="0 0 232 232">
                                     <use href="sprites.svg#gear"></use>
                                 </svg>
@@ -235,7 +238,8 @@
                 </div>
             </div>
             <div class="handle"></div>
-            <div class="feature_pane foreground" data-item="feature_pane">
+            <div class="feature_pane foreground pointer"
+                data-item="feature_pane">
                 <div>
                     <span>UI</span>
                     <span class="plus"></span>
