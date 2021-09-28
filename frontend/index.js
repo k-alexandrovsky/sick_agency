@@ -34,7 +34,7 @@ const form_btn_lines = {
     velocity: 0.1,
     scale: 1,
     params: {
-        delay: 2750,
+        delay: 3000,
         v_min: 0.1,
         v_max: 5,
         slowdown: 0.95,
