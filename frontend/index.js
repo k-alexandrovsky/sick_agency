@@ -32,6 +32,7 @@ const form_btn = {
 const form_btn_lines = {
     pos: 0,
     velocity: 0.1,
+    scale: 1,
     params: {
         delay: 1000,
         v_min: 0.1,
@@ -359,9 +360,13 @@ const animation_loop = ()=>{
             `${form_btn.pos + (form_btn.offset - form_btn_lines.pos)*2}deg`);
         form_btn_lines.el.style.setProperty('--rotate2',
             `${form_btn_lines.pos * 3 - form_btn.offset * 2}deg`);
+        form_btn_lines.el.style.setProperty('--scale',
+            form_btn_lines.scale = Math.min(1.05, form_btn_lines.scale*1.005));
     } else {
         form_btn_lines.el.style.setProperty('--rotate2',
             `${form_btn_lines.pos}deg`);
+        form_btn_lines.el.style.setProperty('--scale',
+            form_btn_lines.scale = Math.max(1, form_btn_lines.scale*0.995));
     }
     // FORM_SUCCESS
     if (document.body.classList.contains('show_form')) {

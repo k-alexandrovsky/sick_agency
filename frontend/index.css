@@ -117,7 +117,8 @@ body.enter .form_btn.main {
     transition: fill 200ms ease;
 }
 .form_btn.main svg {
-    transform: rotate(var(--rotate2));
+    transform: scale(var(--scale)) rotate(var(--rotate2));
+    --scale: 1;
 }
 
 .form_btn.form {
