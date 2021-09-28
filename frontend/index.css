@@ -61,7 +61,10 @@ body.show_form #contact_form { transform: translateX(0); }
     z-index: 10;
     opacity: 0;
     transition: opacity 400ms ease, transform 500ms ease-in;
+    transition-delay: 2500ms;
     transform: rotate(calc(var(--rotate) / -0.5)) scale(5);
+    transform-origin: 50% 50%;
+    --rotate: 0deg;
     --scale: 1;
     --scale-origin: 50% 50%;
 }
@@ -71,6 +74,7 @@ body.show_form #contact_form { transform: translateX(0); }
     25% { transform: scaleX(0.95) scaleY(1.05); }
     75% { transform: scaleX(1.05) scaleY(0.95); }
 }
+.logo.dragging { transition-delay: 0ms; }
 .logo.dragging > svg {
     animation: squish 1s linear 0ms infinite normal forwards;
     animation-direction: normal, reverse;
@@ -78,7 +82,6 @@ body.show_form #contact_form { transform: translateX(0); }
 body.enter .logo {
     opacity: 1;
     transform: rotate(var(--rotate)) scale(var(--scale));
-    transform-origin: 50% 50%;
 }
 
 .form_btn {
@@ -105,7 +108,7 @@ body.enter .logo {
 }
 .form_btn.main:hover { transition: none !important; }
 body.before_enter .form_btn.main {
-    transition: transform 1s var(--overshoot) 0.5s;
+    transition: transform 1000ms var(--overshoot) 3000ms;
 }
 body.enter .form_btn.main {
     transform: translateX(0) rotate(var(--rotate));
@@ -159,8 +162,34 @@ body.enter .form_btn.main {
     display: flex;
     overflow: hidden;
 }
-.layout > * { flex: 0 0 auto; }
+.layout > * {
+    flex: 0 0 auto;
+    transition: transform 500ms ease, opacity 300ms ease;
+    transition-delay: 500ms;
+    opacity: 0;
+}
+.layout .layout > * {
+    transition-delay: 1000ms;
+}
+.layout .layout .layout > * {
+    transition-delay: 1500ms;
+}
+.layout .layout .layout .layout > * {
+    transition-delay: 2000ms;
+}
+.layout.horizontal > :first-child {
+    transform: translate(-5vw, 0vw);
+}
+.layout.horizontal > :last-child {
+    transform: translate(5vw, 0vw);
+}
 .layout.vertical { flex-direction: column; }
+.layout.vertical > :first-child {
+    transform: translate(0vw, -5vw);
+}
+.layout.vertical > :last-child {
+    transform: translate(0vw, 5vw);
+}
 .layout[data-layout="main"] {
     width: 100vw;
     height: 100vh;
@@ -169,6 +198,10 @@ body.enter .form_btn.main {
     transition: opacity 400ms ease, transform 300ms ease;
 }
 body.enter .layout[data-layout="main"] { opacity: 1; }
+body.enter .layout > * {
+    opacity: 1 !important;
+    transform: translate(0vw, 0vw) !important;
+}
 
 .layout > .handle {
     position: relative;
@@ -260,7 +293,7 @@ body.enter .layout[data-layout="main"] { opacity: 1; }
     transform: translateY(8.5%) translateY(-1.6rem);
     user-select: none;
 }
-.layout.horizontal > .feature_pane {
+.layout.horizontal > [data-item="feature_pane"] .feature_pane {
     padding: 0 0.8rem;
     width: var(--size);
     height: auto;
@@ -274,10 +307,10 @@ body.enter .layout[data-layout="main"] { opacity: 1; }
     left: 50%;
     transform: translateX(-75%) translateX(var(--translate));
 }
-.layout.horizontal > .feature_pane > div {
+.layout.horizontal > [data-item="feature_pane"] .feature_pane > div {
     position: relative;
     left: unset;
-    transform: translateY(-75%) translateY(var(--translate));
+    transform: translateY(25%) translateY(var(--translate));
 }
 .feature_pane .plus {
     position: relative;
@@ -286,7 +319,7 @@ body.enter .layout[data-layout="main"] { opacity: 1; }
     margin: 0.8vw calc(var(--size) * -0.2) 0 calc(var(--size) * -0.2);
 }
 .feature_pane .plus::before { content: '+'; }
-.layout.horizontal > .feature_pane .plus {
+.layout.horizontal > [data-item="feature_pane"] .feature_pane .plus {
     margin: calc(var(--size) * -0.2) 0.8vw calc(var(--size) * -0.2) 0;
 }
 

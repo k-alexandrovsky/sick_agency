@@ -23,7 +23,7 @@
         line-height: 0.69;
         transform: translateY(9%) translateY(-0.9rem);
     }
-    .layout.horizontal > .feature_pane{
+    .layout.horizontal > [data-item="feature_pane"] .feature_pane {
         line-height: 0.65;
         transform:  rotate(-180deg) translateX(-9.5%) translateX(0.9rem);
     }

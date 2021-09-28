@@ -34,7 +34,7 @@ const form_btn_lines = {
     velocity: 0.1,
     scale: 1,
     params: {
-        delay: 1000,
+        delay: 3000,
         v_min: 0.1,
         v_max: 5,
         slowdown: 0.95,
@@ -345,8 +345,8 @@ const animation_loop = ()=>{
     apply_accel(gears, 360);
     gears.el.style.setProperty('--rotate', `${gears.pos}deg`);
     // FEATURES
-    const features_size_prop = features.el.parentElement.classList
-        .contains('horizontal') ? 'offsetHeight' : 'offsetWidth';
+    const features_size_prop = features.el.parentElement.parentElement
+        .classList.contains('horizontal') ? 'offsetHeight' : 'offsetWidth';
     const features_size = features.el.children[0][features_size_prop]/2;
     features.pos = 'override_pos' in features ? features.override_pos
         : (features.pos - features.params.velocity*v_glob + features_size)
@@ -489,8 +489,9 @@ const setup_features_drag = f=>{
     el.onmousedown = el.ontouchstart = e=>{
         e.preventDefault();
         e.stopPropagation();
-        const [cursor_coord, cursor_dir] = features.el.parentElement.classList
-            .contains('horizontal') ? ['Y', -1] : ['X', 1];
+        const [cursor_coord, cursor_dir] = features.el.parentElement
+            .parentElement.classList.contains('horizontal')
+                ? ['Y', -1] : ['X', 1];
         const get_pos = _e=>_e.touches
             ? _e.touches[0]['page'+cursor_coord]
             : _e['client'+cursor_coord];
@@ -633,7 +634,7 @@ window.onload = ()=>{
     gears.el = $('.gears');
 
     features.el = $('.feature_pane');
-    features.pos=features.el.children[0].offsetWidth/4;
+    features.pos=features.el.children[0].offsetWidth/2;
     setup_features_drag(features);
 
     const logo = $('.logo');
