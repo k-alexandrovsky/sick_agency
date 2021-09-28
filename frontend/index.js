@@ -472,6 +472,8 @@ const setup_logo_drag = el=>{
             document.removeEventListener('touchend', mouse_up);
             document.removeEventListener('mousemove', mouse_move);
             document.removeEventListener('touchmove', mouse_move);
+            if (IS_MOBILE)
+                el.click();
         };
         document.addEventListener('wheel', on_wheel,
             {passive: false, capture: true});
