@@ -433,7 +433,7 @@ const setup_logo_drag = el=>{
         const on_wheel = _e=>{
             _e.stopPropagation();
             const old_scale = (+el.style.getPropertyValue('--scale'))||1;
-            const new_scale = clamp(0.75, old_scale + _e.wheelDelta / 500, 4);
+            const new_scale = clamp(0.75, old_scale + _e.wheelDelta / 1000, 4);
             el.style.setProperty('--scale', new_scale);
         };
         const mouse_move = _e=>{
