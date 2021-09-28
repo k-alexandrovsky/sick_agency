@@ -2,6 +2,7 @@
     html[lang] {
         font-size: 1.8vw;
         --borders: 2px;
+        --intro-roll: 15vw;
     }
 
     html {
