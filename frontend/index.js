@@ -193,14 +193,15 @@ const hex_to_rgb = hex=>{
     return [...result].slice(1).map(h=>parseInt(h, 16));
 };
 const clamp = (min, v, max)=>Math.max(min, Math.min(v, max));
+const sleep = ms=>new Promise(r=>setTimeout(r, ms));
 
-const get_next_random_layout = layouts=>{
-    const last_shown = +(sessionStorage.last_layout||'-1');
+const get_next_random = (key, count)=>{
+    const last_shown = +(sessionStorage[key]||'-1');
     let idx;
     do {
-        idx = Math.floor(Math.random()*layouts.length);
+        idx = Math.floor(Math.random()*count);
     } while (idx==last_shown);
-    sessionStorage.last_layout = idx;
+    sessionStorage[key] = idx;
     return idx;
 };
 
@@ -314,9 +315,32 @@ const init_layout = ()=>{
     const _layouts = IS_MOBILE ? mobile_layouts : layouts;
     const selected_idx = qs_layout
         ? (+qs_layout) % _layouts.length
-        : get_next_random_layout(_layouts);
+        : get_next_random('last_layout', _layouts.length);
     console.log(`layout #${selected_idx}`);
     process_layout(main_layout, ..._layouts[selected_idx]);
+};
+
+const init_colors = ()=>{
+    const [bg, fg] = colors[get_next_random('last_colors', colors.length)];
+    document.documentElement.style.setProperty('--background', bg);
+    document.documentElement.style.setProperty('--background-rgb',
+        `${hex_to_rgb(bg)}`);
+    document.documentElement.style.setProperty('--foreground', fg);
+    document.documentElement.style.setProperty('--foregroung-rgb',
+        `${hex_to_rgb(fg)}`);
+}
+
+const reload_layout = async ()=>{
+    document.body.classList.add('exit');
+    await sleep(900);
+    document.body.classList.remove('exit');
+    document.body.classList.remove('enter');
+    init_layout();
+    init_colors();
+    place_form_btn();
+    place_logo();
+    await sleep(50);
+    document.body.classList.add('enter');
 };
 
 let tm_start = Date.now();
@@ -426,11 +450,25 @@ const dbg_setup = ()=>{
     });
 };
 
-const setup_logo_drag = el=>{
+const place_logo = ()=>{
+    const logo = $('.logo');
+    logo.style.setProperty('left', `${Math.random()*25+5}vw`);
+    logo.style.setProperty('top', `${Math.random()*25+5}vh`);
+    logo.style.setProperty('--rotate', `${Math.random()*150-75}deg`);
+};
+
+const place_form_btn = ()=>{
+    form_btn.el.style.setProperty('--rotate',
+        `${form_btn.pos = Math.random()*60-30}deg`);
+};
+
+const setup_logo_drag = ()=>{
+    const el = $('.logo');
     let dragged = false;
     el.addEventListener('click', e=>{
-        if (dragged)
-            e.preventDefault();
+        e.preventDefault();
+        if (!dragged)
+            reload_layout();
         dragged = false;
     });
     const logo_svg = el.querySelector('svg');
@@ -627,6 +665,7 @@ const init_mobile = ()=>{
 
 window.onload = ()=>{
     init_layout();
+    init_colors();
 
     if (IS_MOBILE)
         init_mobile();
@@ -639,15 +678,11 @@ window.onload = ()=>{
     features.pos=features.el.children[0].offsetWidth/2;
     setup_features_drag(features);
 
-    const logo = $('.logo');
-    logo.style.setProperty('left', `${Math.random()*25+5}vw`);
-    logo.style.setProperty('top', `${Math.random()*25+5}vh`);
-    logo.style.setProperty('--rotate', `${Math.random()*150-75}deg`);
-    setup_logo_drag(logo);
+    place_logo();
+    setup_logo_drag();
 
     form_btn.el = $('.form_btn');
-    form_btn.el.style.setProperty('--rotate',
-        `${form_btn.pos = Math.random()*60-30}deg`);
+    place_form_btn();
     form_btn.el.addEventListener('mouseenter', ()=>{
         form_btn.offset = form_btn_lines.pos;
         form_btn.hovered = true;
@@ -668,14 +703,6 @@ window.onload = ()=>{
     });
 
     form_btn_lines.el = $('.form_btn svg');
-
-    const [bg, fg] = colors[Math.floor(Math.random() * colors.length)];
-    document.documentElement.style.setProperty('--background', bg);
-    document.documentElement.style.setProperty('--background-rgb',
-        `${hex_to_rgb(bg)}`);
-    document.documentElement.style.setProperty('--foreground', fg);
-    document.documentElement.style.setProperty('--foregroung-rgb',
-        `${hex_to_rgb(fg)}`);
 
     form_success.el = new Array(4).fill()
         .map((_, i)=>$(`.content_submitted > div:nth-child(${i+1})`));

@@ -84,6 +84,11 @@ body.enter .logo {
     opacity: 1;
     transform: rotate(var(--rotate)) scale(var(--scale));
 }
+body.exit .logo {
+    opacity: 0;
+    transition-delay: 0ms;
+    transform: rotate(calc(var(--rotate) * 1.5)) scale(3);
+}
 
 .form_btn {
     position: fixed;
@@ -113,6 +118,10 @@ body.before_enter .form_btn.main {
 }
 body.enter .form_btn.main {
     transform: translateX(0) rotate(var(--rotate));
+}
+body.exit .form_btn.main {
+    transform: translateX(24.5rem) rotate(calc(var(--rotate) + 180deg));
+    transition-delay: 0ms;
 }
 .form_btn svg {
     position: absolute;
@@ -196,12 +205,39 @@ body.enter .form_btn.main {
     height: 100vh;
     background-color: var(--background);
     opacity: 0;
-    transition: opacity 400ms ease, transform 300ms ease;
+    transition: opacity 400ms ease, transform 300ms ease,
+        background-color 300ms ease;
 }
 body.enter .layout[data-layout="main"] { opacity: 1; }
 body.enter .layout > * {
     opacity: 1 !important;
     transform: translate(0vw, 0vw) !important;
+}
+
+body.exit .layout > * {
+    opacity: 0 !important;
+    transition-delay: 700ms;
+}
+body.exit .layout .layout > * {
+    transition-delay: 500ms;
+}
+body.exit .layout .layout .layout > * {
+    transition-delay: 300ms;
+}
+body.exit .layout .layout .layout .layout > * {
+    transition-delay: 0ms;
+}
+body.exit .layout.horizontal > :first-child {
+    transform: translate(0vw, calc(var(--intro-roll) * -2)) !important;
+}
+body.exit .layout.horizontal > :last-child {
+    transform: translate(0vw, calc(var(--intro-roll) * 2)) !important;
+}
+body.exit .layout.vertical > :first-child {
+    transform: translate(calc(var(--intro-roll) * -2), 0vw) !important;
+}
+body.exit .layout.vertical > :last-child {
+    transform: translate(calc(var(--intro-roll) * 2), 0vw) !important;
 }
 
 .layout > .handle {
