@@ -361,33 +361,39 @@ body.exit .layout.vertical > :last-child {
     margin: calc(var(--size) * -0.2) 0.8vw calc(var(--size) * -0.2) 0;
 }
 
-.gears { --rotate: 0deg; }
+.gears {
+    --rotate: 0deg;
+    --gear-size: 100%;
+    --global-rotate: 0deg;
+}
 .gears > div {
+    position: absolute;
+    top: 50%;
+    left: 50%;
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
     box-sizing: border-box;
-    height: 100%;
-    padding: 3.6rem 3.6rem 4.2rem 3.6rem;
+    width: calc(var(--gear-size) - 7.2rem);
     background-color: var(--background);
+    transform: translate(-50%, -50%) rotate(var(--global-rotate));
+    transition: transform 200ms ease;
 }
-.gears[data-variant="horizontal"] > div { flex-direction: row; }
 .gear {
     position: relative;
     display: block;
-    width: min(12vw, 18vh);
+    flex: 1 1 0;
+    padding-top: 50%;
 }
-.gear .foreground { transition: fill 200ms ease; }
+.gear .foreground {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    transition: fill 200ms ease;
+}
 .gear:hover .foreground { fill: var(--accent); }
-.gear:first-child { transform: translateY(3%); }
-.gear:last-child { transform: translateY(-3%); }
-.gears[data-variant="horizontal"] .gear:first-child {
-    transform: translateX(3%);
-}
-.gears[data-variant="horizontal"] .gear:last-child {
-    transform: translateX(-3%);
-}
+.gear:first-child { transform: translateX(3%); }
+.gear:last-child { transform: translateX(-3%); }
 .gear:first-child .foreground {
     transform: rotate(var(--rotate));
 }

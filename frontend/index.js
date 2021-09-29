@@ -141,7 +141,7 @@ const mobile_layouts = [
                 ['feature_pane', feature_pane_props_m],
                 ['V',
                     ['description', {flex: '1 1 0'}],
-                    ['gears', {flex: '1 1 0'}, 'horizontal'],
+                    ['gears', {flex: '1 1 0'}],
                     {'--limits': '0.5:2'},
                 ],
             ],
@@ -156,7 +156,7 @@ const mobile_layouts = [
             ['V',
                 ['V',
                     ['description', {flex: '1 1 0'}],
-                    ['gears', {flex: '1 1 0'}, 'horizontal'],
+                    ['gears', {flex: '1 1 0'}],
                     {'--limits': '0.5:2'},
                 ],
                 ['feature_pane', feature_pane_props_m],
@@ -172,7 +172,7 @@ const mobile_layouts = [
             ['splash', {flex: '1 1 0'}],
             ['H',
                 ['V',
-                    ['gears', {flex: '1 1 0'}, 'horizontal'],
+                    ['gears', {flex: '1 1 0'}],
                     ['description', {flex: '1 1 0'}],
                     {'--limits': '0.5:2'},
                 ],
@@ -289,13 +289,9 @@ const init_layout = ()=>{
                 layout.classList.add('layout');
                 process_layout(layout, ...child);
             } else {
-                const [key, props, variant] = child;
+                const [key, props] = child;
                 apply_props(items[key], props);
-                const child_n = node.appendChild(items[key]);
-                if (variant)
-                    child_n.setAttribute('data-variant', variant);
-                else
-                    child_n.removeAttribute('data-variant');
+                node.appendChild(items[key]);
             }
         };
         node.classList.toggle('vertical', type==='V');
@@ -368,6 +364,11 @@ const animation_loop = ()=>{
     // GEARS
     apply_accel(gears, 360);
     gears.el.style.setProperty('--rotate', `${gears.pos}deg`);
+    const {offsetWidth: gears_width, offsetHeight: gears_height} = gears.el;
+    gears.el.style.setProperty('--gear-size',
+        `${Math.max(gears_height, gears_width)}px`);
+    gears.el.style.setProperty('--global-rotate',
+        `${gears_width > gears_height ? 0 : 90}deg`);
     // FEATURES
     const features_size_prop = features.el.parentElement.parentElement
         .classList.contains('horizontal') ? 'offsetHeight' : 'offsetWidth';
