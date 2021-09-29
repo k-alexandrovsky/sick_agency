@@ -411,7 +411,8 @@ body.exit .layout.vertical > :last-child {
 }
 .gear:hover .icon {
     fill: white;
-    transform: translate(-50%, -50%) scale(1.2);
+    transform: translate(-50%, -50%) rotate(calc(var(--global-rotate) * -1))
+        scale(1.2);
 }
 
 .description {
