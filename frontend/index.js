@@ -492,10 +492,11 @@ const setup_logo_drag = ()=>{
             const new_scale = clamp(0.75, old_scale + _e.wheelDelta / 1000, 4);
             el.style.setProperty('--scale', new_scale);
         };
+        let last_move = e;
         const mouse_move = _e=>{
-            dragged = true;
-            el.classList.add('dragging');
             const [x, y] = get_pos(_e);
+            if (!dragged)
+                return last_move = _e;
             const left = clamp(5, init_left + (x - init_x)
                 / document.documentElement.clientWidth * 100, 90);
             el.style.setProperty('left', `${left}vw`);
@@ -503,7 +504,14 @@ const setup_logo_drag = ()=>{
                 / document.documentElement.clientHeight * 100, 80);
             el.style.setProperty('top', `${top}vh`);
         };
+        const drag_start_timer = setTimeout(()=>{
+            dragged = true;
+            el.classList.add('dragging');
+            document.body.classList.add('dragging');
+            mouse_move(last_move);
+        }, 300);
         const mouse_up = ()=>{
+            clearTimeout(drag_start_timer);
             logo_svg.addEventListener('animationiteration', on_squish_end);
             document.removeEventListener('wheel', on_wheel, {capture: true});
             document.body.classList.remove('dragging');
@@ -516,7 +524,6 @@ const setup_logo_drag = ()=>{
         };
         document.addEventListener('wheel', on_wheel,
             {passive: false, capture: true});
-        document.body.classList.add('dragging');
         document.addEventListener('mousemove', mouse_move);
         document.addEventListener('touchmove', mouse_move);
         document.addEventListener('mouseup', mouse_up);
