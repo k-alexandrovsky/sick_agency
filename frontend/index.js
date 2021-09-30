@@ -512,7 +512,8 @@ const setup_logo_drag = ()=>{
         }, 300);
         const mouse_up = ()=>{
             clearTimeout(drag_start_timer);
-            logo_svg.addEventListener('animationiteration', on_squish_end);
+            if (dragged)
+                logo_svg.addEventListener('animationiteration', on_squish_end);
             document.removeEventListener('wheel', on_wheel, {capture: true});
             document.body.classList.remove('dragging');
             document.removeEventListener('mouseup', mouse_up);
