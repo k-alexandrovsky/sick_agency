@@ -207,7 +207,7 @@ body.exit .form_btn.main {
     background-color: var(--background);
     opacity: 0;
     transition: opacity 400ms ease, transform 300ms ease,
-        background-color 300ms ease;
+        background-color 500ms ease;
 }
 body.enter .layout[data-layout="main"] { opacity: 1; }
 body.enter .layout > * {
