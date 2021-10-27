@@ -365,10 +365,11 @@ const animation_loop = ()=>{
     apply_accel(gears, 360);
     gears.el.style.setProperty('--rotate', `${gears.pos}deg`);
     const {offsetWidth: gears_width, offsetHeight: gears_height} = gears.el;
-    gears.el.style.setProperty('--gear-size',
-        `${Math.max(gears_height, gears_width)}px`);
-    gears.el.style.setProperty('--global-rotate',
-        `${gears_width > gears_height ? 0 : 90}deg`);
+    const gears_hor = gears_width > gears_height;
+    gears.el.style.setProperty('--gear-size', `${gears_hor
+        ? Math.min(gears_height * 2, gears_width)
+        : Math.min(gears_height, gears_width * 2)}px`);
+    gears.el.style.setProperty('--global-rotate', `${gears_hor ? 0 : 90}deg`);
     // FEATURES
     const features_size_prop = features.el.parentElement.parentElement
         .classList.contains('horizontal') ? 'offsetHeight' : 'offsetWidth';
