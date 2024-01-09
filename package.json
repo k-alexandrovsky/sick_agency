@@ -1,0 +1,7 @@
+{
+  "name": "sick_agency",
+  "dependencies": {
+    "form-data": "^4.0.0",
+    "mailgun.js": "^9.4.1"
+  }
+}
